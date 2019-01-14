@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 46647d60807f8ef44abfcaa2d9a05e45, type: 3}
+  m_Name: SmallHouse
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 7999873015459388115, guid: 7d0292b96260707498c6ba78c5337b59, type: 3}
+  bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
+    type: 3}
+  buildEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3,
+    type: 3}
+  destroyEffect: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56,
+    type: 3}
+  sprite: {fileID: 21300000, guid: 18a10ac559cdb5d4480864d9b5f4fc6b, type: 3}
+  name: Small House
+  description: 
+  canBuild: 1
+  canSell: 1
+  canHarvest: 0
+  canRotate: 1
+  cost:
+    gold: 0
+    wood: 5
+    stone: 0
+    food: 0
+    copper: 0
+    citizen: -3
+  rpmPlus:
+    resource: 3
+    amount: 0
+    perSeconds: 0
+    isGathering: 0
+  rpmMinus:
+    resource: 3
+    amount: 0
+    perSeconds: 0
+    isGathering: 0

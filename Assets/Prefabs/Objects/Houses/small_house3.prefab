@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5450237364254503102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6721964533504495505}
+  - component: {fileID: 2751356544415578824}
+  m_Layer: 0
+  m_Name: small_house3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6721964533504495505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5450237364254503102}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.13854235, y: 0.24450362, z: -0.052108884}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2751356544415578824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5450237364254503102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 05df5fa607f4f7741975187f5dd86729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  prefab: {fileID: 7999873015459388115, guid: 7d0292b96260707498c6ba78c5337b59, type: 3}
+  bgPrefab: {fileID: 2918311507915140970, guid: 49a6d576b69ecec459e6f1befd7a46a2,
+    type: 3}
+  destroyEffect: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56,
+    type: 3}
+  buildEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3,
+    type: 3}
+  sprite: {fileID: 21300000, guid: 18a10ac559cdb5d4480864d9b5f4fc6b, type: 3}
+  buildingName: Small House
+  description: Just small house, suitable for 3 citizen
+  canBuild: 1
+  canSell: 1
+  canHarvest: 0
+  canRotate: 1
+  cost:
+    gold: 0
+    wood: 5
+    stone: 0
+    food: 0
+    copper: 0
+    citizen: -3
+  plusResource:
+    resource: 0
+    amount: 0
+    perSeconds: 0
+    isGathering: 1
+  minusResource:
+    resource: 3
+    amount: 0
+    perSeconds: 0
+    isGathering: 0
+  gameData: {fileID: 0}
