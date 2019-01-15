@@ -7,8 +7,18 @@ public class Notification : MonoBehaviour
 {
     public Text text;
 
-    public void SetNotification(string s)
+    void OnEnable()
     {
-        text.text = s;
-    }
+		EventManager.OnSendNotification += SetNotification;
+	}
+
+    void OnDisable()
+    {
+		EventManager.OnSendNotification -= SetNotification;
+	}
+
+	public void SetNotification(string s)
+	{
+		text.text = s;
+	}
 }

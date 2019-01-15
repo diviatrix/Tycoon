@@ -6,170 +6,116 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    [Header("Object bindings")]
-    public GameData gameData;
-    public GameObject framePrefab;
-    public GameObject buildFramePrefab;
-    
-    [Header("UI Object bindings")]
-    
-    
-     
-    public Text notificationText; 
+	public GameData gameData;
+	public SnapGrid grid;
+	public GameObject framePrefab;
+    public SceneObjectData buildOjbect;
+	public SceneObjectBehavior selectedObject;
 
-    [Header("Object debug binding")]
-    public GameObject chosenPrefabToBuild; // prefab for instantiation    
-    public GameObject selectedGO;
-    public ResourcePerTime food = new ResourcePerTime() {resource = Resource.food, perSeconds = 60, isGathering = true};
-
-    // frames
-    private GameObject buildingSelectionFrameObject;
-    private GameObject buildFrameObject;
-    // grid stuff
-    private SnapGrid grid;
-    
-    private bool isMobile; // check if mobile or pc
-    float touchDuration;
-    Touch touch;
     private Vector3 finalPosition = new Vector3();
+    private bool isMobile; // check if mobile or pc
+    private float touchDuration;
+    private Touch touch;
+	private bool inBuildMode;
+	private SaveSystem saveSystem;
+	private FieldGenerator fieldGenerator;
+	private Transform spawnedObjectsParent;
+	private FrameMover frameMover;
+	private ResourcePerTime food = new ResourcePerTime() { resources = new Resources (), perSeconds = 60, isGathering = false };
 
-    private void Start()
+	private void Start()
     {
-        isMobile = Application.isMobilePlatform;
-        CoreObjectsFindOnScene();
-        GetComponent<BuildPanelController>().FillBuildPanel();
-        
-        InstantiateFrame();
-        InstantiateBuildFrame();
-    }
+		fieldGenerator = gameObject.AddComponent<FieldGenerator>();
 
-    private bool IsPointerOverUIObject()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        return results.Count > 0;
-    }
+		frameMover = gameObject.AddComponent<FrameMover>();
+		frameMover.framePrefab = framePrefab;
 
-    public void ExitGame()
-    {
-        Application.Quit();
-    }
+		EventManager.GameData = gameData;
 
-    private void CoreObjectsFindOnScene()
-    {
-        grid = FindObjectOfType<SnapGrid>();
-    }
+		saveSystem = new SaveSystem();
+		
+		spawnedObjectsParent = new GameObject("Spawned Objects").transform;
 
-    public void SelectedDestroy()
-    {
-        if (!selectedGO) return;
-        PlaceableObject bld = selectedGO.GetComponent<PlaceableObject>();
-                
-        bld.DestroyMe();
-        ClearSelection();        
-    }
-    public void SelectedSell()
-    {
-        if (!selectedGO) return;
-        PlaceableObject bld = selectedGO.GetComponent<PlaceableObject>();
-        if (bld.canSell)
-        {
-            bld.Sell();
-            ClearSelection();
-            GetComponent<Notification>().text.text = "Sold " + bld.buildingName;
-        } 
-        else
-        {
-            GetComponent<Notification>().text.text = bld.buildingName + " is not sellable" ;
-        }
-                
-    }
-    public void SelectedRotate()
-    {
-        if (!selectedGO) return;
-        selectedGO.GetComponent<PlaceableObject>().RotateMe(90);
-    }
+		isMobile = Application.isMobilePlatform;		
+	}
 
-    public void EnterBuildMode()
-    {
-        ClearSelection();
-        GetComponent<BuildActionPanelController>().EnterBuildMode(chosenPrefabToBuild.GetComponent<PlaceableObject>());   
-    }
+	public void StartNewGame()
+	{
+		WipeScene();
+		fieldGenerator.Generate(228, grid, spawnedObjectsParent);
+		gameData.ResetResources();
+	}
 
-    public void ExitBuildMode()
-    {
-        GetComponent<BuildActionPanelController>().Disable();
-        chosenPrefabToBuild = null; // clear building prefab
-        buildFrameObject.SetActive(false);
-    }
-    void EnableBuildingSelectionFrameTo(GameObject go)
-    {
-        buildingSelectionFrameObject.transform.position = go.transform.position;
-        buildingSelectionFrameObject.SetActive(true);
-    }
+	public void QuitGame()
+	{
+		Application.Quit();
+	}
 
-    void DisableSelectionFrame()
-    {
-        buildingSelectionFrameObject.SetActive(false);
-    }
+	void OnEnable()
+	{
+		EventManager.OnEnterBuildMode += EnterBuildMode;
+		EventManager.OnExitBuildMode += ExitBuildMode;
+		EventManager.OnSelection += SelectObject;
+		EventManager.OnExitSelectMode += ExitSelectMode;
+		EventManager.AddToBalance += ChangePlayerBalance;
+		EventManager.OnRecieveGameData += SetGameData;
+	}
 
+	void OnDisable()
+	{
+		EventManager.OnExitBuildMode -= ExitBuildMode;
+		EventManager.OnEnterBuildMode -= EnterBuildMode;
+		EventManager.OnSelection -= SelectObject;
+		EventManager.OnExitSelectMode -= ExitSelectMode;
+		EventManager.OnRecieveGameData -= SetGameData;
+	}
 
-    public void HandleObjectsInteraction(GameObject clickedGo, Vector3 point)
-    {
-        
+	void SetGameData(GameData data)
+	{
+		gameData = data;
+	}
 
-        // build stuff, check if clicked snapgrid
-        SnapGrid clickedGrid = clickedGo.GetComponent<SnapGrid>();
-        if (clickedGrid)
-        {            
-            ClearSelection();
+	public void SellSelectedObject()
+	{
+		ChangePlayerBalance(selectedObject.data.cost);
+		Destroy(selectedObject.gameObject);
+		EventManager.ExitSelectMode();
+	}
 
-            if (!chosenPrefabToBuild) // leave if there is no prefab
-            {
-                return; // #todo: need to add some ui action like choose                
-            }
+	public void RotateSelectedObject()
+	{
+		selectedObject.transform.Rotate(Vector3.up, 90);
+	}
 
-            // check if can build, and build
-            if (CanBuildIt(chosenPrefabToBuild.GetComponent<PlaceableObject>()))
-            {
-                gameData.resources = gameData.resources - chosenPrefabToBuild.GetComponent<PlaceableObject>().cost;
-                PlaceObjectWithParams(chosenPrefabToBuild, point, Quaternion.identity);
-            }
-            EnterBuildMode();
-        }
+	public void ChangePlayerBalance(Resources res)
+	{
+		gameData.AddResources(res);
+	}
 
-        // for interaction with anything, like.. Building?
-        ClickableObject clickableGo = clickedGo.GetComponent<ClickableObject>();
-        if (clickableGo)
-        {
-            PlaceableObject clickedBuilding = clickableGo.GetComponent<PlaceableObject>();
-            if (clickedBuilding)
-            {
-                selectedGO = clickableGo.gameObject; // set clicked go as selected
-                EnableBuildingSelectionFrameTo(selectedGO);
-                ExitBuildMode();                
-            }
-            clickableGo.OnClick();
-        }
-    }
+	void SelectObject(SceneObjectBehavior sob)
+	{
+		selectedObject = sob;
+		EventManager.Message = "Selected " + sob.data.objectName;
+	}
 
-    // gameplay build
-    public bool CanBuildIt(PlaceableObject bld)
-    {
-        bool can = false;
+	void EnterBuildMode(SceneObjectData data)
+	{
+		buildOjbect = data;
+		inBuildMode = true;
+	}
 
-        // need fix
-        if (bld.cost <= gameData.resources)
-        {
-            can = true;
-        }
-        return can;
-    }
+	void ExitSelectMode()
+	{
+		selectedObject = null;
+		EventManager.Message = "";
+	}
 
+	void ExitBuildMode()
+	{
+		inBuildMode = false;
+	}
 
-    void Update()
+	void Update()
     {
         // ray
         RaycastHit hit;
@@ -187,9 +133,9 @@ public class GameController : MonoBehaviour
             { //if there is any touch
                 touchDuration += Time.deltaTime;
                 touch = Input.GetTouch(0);
-    
-                if(touch.phase == TouchPhase.Ended && touchDuration < 0.2f) //making sure it only check the touch once && it was a short touch/tap and not a dragging.
-                
+
+				//making sure it only check the touch once && it was a short touch/tap and not a dragging.
+				if (touch.phase == TouchPhase.Ended && touchDuration < 0.2f && !EventSystem.current.IsPointerOverGameObject()) 
                 {
                     StartCoroutine("singleOrDouble");
                 }
@@ -212,150 +158,147 @@ public class GameController : MonoBehaviour
                 }
             }
 
-            if (chosenPrefabToBuild != null)
-            {                
-                buildFrameObject.transform.position = finalPosition;
-            }
-
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                GenerateForest();
-            }
-
             if (Input.GetMouseButtonDown(1)) // exit build mode or rmb #todo: rework this, dunno how
             {
-                ExitBuildMode();
+				EventManager.ExitBuildMode();
+				EventManager.ExitSelectMode();
             }
         }
     }
-    IEnumerator singleOrDouble()
-    {
-        // ray
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        // always casting
-        if (Physics.Raycast(ray, out hit))
+    public void HandleObjectsInteraction(GameObject go, Vector3 point)
+    {
+        // build stuff, check if clicked snapgrid
+        SnapGrid clickedGrid = go.GetComponent<SnapGrid>();
+        if (clickedGrid)
         {
-            finalPosition = grid.GetNearestPointOnGrid(hit.point);
+			if (inBuildMode)
+			{
+				if (gameData.GetBalance() >= buildOjbect.cost)
+				{
+					gameData.ReduceResources(buildOjbect.cost);
+					EventManager.Message = "Built: " + buildOjbect.objectName;
+					ObjectPlacer.PlaceObject(buildOjbect, grid.GetNearestPointOnGrid(point), Quaternion.identity, spawnedObjectsParent);
+					// relaunch OnEnterBuildMode event with selected object
+					EventManager.BuildObject = buildOjbect;
+				}
+				else EventManager.Message = "Cant build " + buildOjbect.objectName + ", not enough resources";
+			}
+			else // deselect active object if not in build mode and clicked ground
+			{
+				EventManager.ExitSelectMode();
+			}
         }
 
-        yield return new WaitForSeconds(0.15f);
-        if(touch.tapCount == 1)
+        // for interaction with SceneObjects
+        SceneObjectBehavior so = go.GetComponent<SceneObjectBehavior>();
+        if (so)
         {
-            if (!IsPointerOverUIObject()) // if not over ui
-                {
-                    Transform go = hit.transform;
-                    if (go != null) HandleObjectsInteraction(go.gameObject, hit.point);
-                }
-        }            
-
-        else if(touch.tapCount == 2){
-            //this coroutine has been called twice. We should stop the next one here otherwise we get two double tap
-            StopCoroutine("singleOrDouble");
-            Debug.Log ("Double");
-        }
-    }
-    public void GenerateForest()
-    {
-        WipeScene();
-        GetComponent<FieldGenerator>().Generate();        
-    }
-
-    public void ClearSelection() // clear unit selection
-    {
-        DisableSelectionFrame();
-        selectedGO = null;
-        GetComponent<SelectionActionPanelController>().ShowActionPanel(false);
-    }
-
-    void InstantiateFrame()
-    {
-        buildingSelectionFrameObject = GameObject.Instantiate(framePrefab, Vector3.down * 100, Quaternion.identity);
-        buildingSelectionFrameObject.SetActive(false);
-    }
-
-    void InstantiateBuildFrame()
-    {
-        buildFrameObject = GameObject.Instantiate(buildFramePrefab, Vector3.zero, Quaternion.identity);
-        buildFrameObject.SetActive(false);
-    }
-
-    public void ChangeActiveBuildingTo(int id)
-    {
-        chosenPrefabToBuild = gameData.availableObjects[id];
-        EnterBuildMode();        
-    }
-
-    public void WipeScene()
-    {
-        gameData.generatedObjects = new List<PlaceableObject>();
-        foreach (Transform child in gameData.generatedObjectsGO.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        gameData.generatedObjects = new List<PlaceableObject>();
-        foreach (Transform child in gameData.generatedObjectsGO.transform)
-        {
-            Destroy(child.gameObject);
-        }
-    }
- 
-    // object placer
-    public void PlaceObjectWithParams(GameObject prefab, Vector3 clickPoint, Quaternion rot)
-    {
-        Vector3 position = grid.GetNearestPointOnGrid(clickPoint);
-        GameObject go = GameObject.Instantiate(prefab);
-        PlaceableObject bld = go.GetComponent<PlaceableObject>();
-        bld.gameData = gameData;
-        bld.Initialize();
-
-        go.name = bld.name;
-        go.transform.position = position;
-    }
-
-    public int SearchIdByNameIn(string str, List<GameObject> list)
-    {
-        int id = 0;
-
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (str == list[i].GetComponent<PlaceableObject>().buildingName)
-            {
-                id = i;
-            }
-        }
-        return id;
-    }
-
-    public void PlaceObjectfromSO(SerializableObject so)
-    {
-        GameObject go = GameObject.Instantiate(gameData.availableObjects[SearchIdByNameIn(so.name, gameData.availableObjects)]);
-        PlaceableObject building = go.GetComponent<PlaceableObject>();
-        building.gameData = gameData;
-        building.type = so.type;
-        building.InitializeWithSO(so);
-    }
-
-    private void FixedUpdate() 
-    {
-        if (gameData.resources.citizen != 0 && !food.isGathering)
-        {
-            StartFoodReduction();
+            EventManager.SelectedObject = so; // Select object
+			EventManager.ExitBuildMode();     // Leave Build mode if was
         }
     }
 
-    void StartFoodReduction()
+    private bool IsPointerOverUIObject()
     {
-        food.amount = gameData.resources.citizen;
-        StartCoroutine(CitizenEatTimer());
-        food.isGathering = true;
+		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current)
+		{
+			position = new Vector2(Input.mousePosition.x, Input.mousePosition.y)
+		};
+		List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 
-    IEnumerator CitizenEatTimer()
-    {   
-        yield return new WaitForSeconds(food.perSeconds);
-        gameData.resources.AddResource(food.resource, -food.amount); 
-        food.isGathering = false;
-    }
+	public void Save()
+	{
+		EventManager.Message = ("Saving game");
+		saveSystem.SaveGame(spawnedObjectsParent, gameData.GetBalance());
+	}
+
+	public void LoadGame()
+	{
+		EventManager.Message = ("Loading game");
+		WipeScene();
+		
+		System.Tuple<List<SceneObjectSaveData>, Resources> loadedData = saveSystem.LoadGame();
+
+		gameData.SetBalance(loadedData.Item2);
+
+		foreach (SceneObjectSaveData so in loadedData.Item1)
+		{
+			ObjectPlacer.PlaceObject(so.data, so.position, so.rotation,spawnedObjectsParent);
+		}
+
+		EventManager.Message = ("Game Loaded");
+	}
+
+	IEnumerator singleOrDouble()
+	{
+		// ray
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		// always casting
+		if (Physics.Raycast(ray, out hit))
+		{
+			finalPosition = grid.GetNearestPointOnGrid(hit.point);
+		}
+
+		yield return new WaitForSeconds(0.15f);
+		if (touch.tapCount == 1)
+		{
+			if (!EventSystem.current.IsPointerOverGameObject()) // if not over ui
+			{
+				Transform go = hit.transform;
+				if (go != null) HandleObjectsInteraction(go.gameObject, hit.point);
+			}
+		}
+
+		else if (touch.tapCount == 2)
+		{
+			//this coroutine has been called twice. We should stop the next one here otherwise we get two double tap
+			StopCoroutine("singleOrDouble");
+			Debug.Log("Double");
+		}
+	}
+
+	public void WipeScene()
+	{
+		foreach (Transform child in spawnedObjectsParent)
+		{
+			Destroy(child.gameObject);
+		}
+	}
+
+	private void FixedUpdate()
+	{
+		if (gameData.GetBalance().citizen != 0 && !food.isGathering)
+		{
+			 StartFoodReduction();			
+		}
+	}
+
+	void StartFoodReduction()
+	{
+		
+		Debug.Log("Start Consuming food");
+		food.resources.food = gameData.GetBalance().citizen;
+		StartCoroutine(CitizenEatTimer());
+		food.isGathering = true;
+	}
+
+	IEnumerator CitizenEatTimer()
+	{
+		Resources consumedFood = new Resources { food = 1 };			
+
+		yield return new WaitForSeconds(food.perSeconds/ food.resources.food);
+
+		if (gameData.GetBalance().food > 0)
+		{
+			gameData.ReduceResources(consumedFood);			
+		} else EventManager.Message = "Our citizen are starving!";
+		
+		food.isGathering = false;
+	}
 }

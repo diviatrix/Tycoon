@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
+  m_Name: 5_Path
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 7340586945132021144, guid: 5c0822138509c7b479b1a280ff1e60e2, type: 3}
+  bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
+    type: 3}
+  buildEffect: {fileID: 0}
+  destroyEffect: {fileID: 0}
+  objectName: Pathway
+  description: Simple path. Make your workers move faster.
+  sprite: {fileID: 21300000, guid: a8e6dd19ddd10294eb13584ae1ab392b, type: 3}
+  canBuild: 1
+  canSell: 1
+  canHarvest: 0
+  canRotate: 1
+  cost:
+    gold: 0
+    wood: 0
+    stone: 1
+    food: 0
+    copper: 0
+    citizen: 0
+  rpm:
+    resources:
+      gold: 0
+      wood: 0
+      stone: 0
+      food: 0
+      copper: 0
+      citizen: 0
+    perSeconds: 0
+    isGathering: 1

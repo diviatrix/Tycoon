@@ -44,6 +44,7 @@ public class SnapGrid : MonoBehaviour
         
         foreach (Vector3 v in allPointsOnMap)
         {
+			if (cellPrefab == null) { return; }
             Transform cell = Instantiate(cellPrefab, v, Quaternion.identity).transform;
             cell.SetParent(transform);
         }

@@ -5,29 +5,26 @@ using UnityEngine.UI;
 
 public class ResourceBarController : MonoBehaviour
 {
-    public GameObject ResourceBar; // link for top ui bar 
-    public Text gold,wood,stone,food,copper,citizen; // list with buttons, will fill in code
+	public GameObject ResourceBar; // link for top ui bar 
+	public Text gold, wood, stone, food, copper, citizen; // list with buttons, will fill in code
 
-    private GameData gameData;
-    
+	void OnEnable()
+	{
+		EventManager.OnChangeBalance += UpdateTopBar;
+	}
 
-    private void Awake() 
-    {
-        gameData = GetComponent<GameData>();
-    }
+	void OnDisable()
+	{
+		EventManager.OnChangeBalance -= UpdateTopBar;
+	}
 
-    void UpdateTopBar()
-    {
-        gold.text = "Gold\n" + gameData.resources.gold;
-        wood.text = "Wood\n" + gameData.resources.wood;
-        stone.text = "Stone\n" + gameData.resources.stone;
-        food.text = "Food\n" + gameData.resources.food;
-        copper.text = "Copper\n" + gameData.resources.copper;
-        citizen.text = "Citizen\n" + gameData.resources.citizen;
-    }
-
-    private void FixedUpdate() 
-    {
-        UpdateTopBar();
-    }    
+	void UpdateTopBar(Resources balance)
+	{
+		gold.text = "Gold\n" + balance.gold;
+		wood.text = "Wood\n" + balance.wood;
+		stone.text = "Stone\n" + balance.stone;
+		food.text = "Food\n" + balance.food;
+		copper.text = "Copper\n" + balance.copper;
+		citizen.text = "Citizen\n" + balance.citizen;
+	}
 }

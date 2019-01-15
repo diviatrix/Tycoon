@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: d6e1f36a423ce3844814386f6f0f5486, type: 3}
+  m_Name: GameData
+  m_EditorClassIdentifier: 
+  startResources:
+    gold: 50
+    wood: 50
+    stone: 50
+    food: 50
+    copper: 50
+    citizen: 0
+  playerResources:
+    gold: 25
+    wood: 18
+    stone: 40
+    food: 50
+    copper: 50
+    citizen: 3
+  buildObjects:
+  - {fileID: 11400000, guid: cf18c93b25420a6449c69afece11e93c, type: 2}
+  - {fileID: 11400000, guid: be835f0ffca260b429b9933f88a7aff8, type: 2}
+  - {fileID: 11400000, guid: a0a23de25168ed44dbab039403241c0c, type: 2}
+  - {fileID: 11400000, guid: 7f06dc8d0a903a84eac9ab5326c97696, type: 2}
+  - {fileID: 11400000, guid: adc101ff1ad808c4baab82716003f86a, type: 2}
+  - {fileID: 11400000, guid: 8a306aab5a756564ab83f74150892b66, type: 2}
+  - {fileID: 11400000, guid: 50b4f0944f6567d4288b262facf5d7bc, type: 2}
+  resourceObjects:
+  - sceneObjectData: {fileID: 11400000, guid: 98d51dd39a9945f4ab6d9b0443fbcb77, type: 2}
+    rate: 1
+  - sceneObjectData: {fileID: 11400000, guid: 6ee87efba9d8d1d47a935447824bfa35, type: 2}
+    rate: 1
+  - sceneObjectData: {fileID: 11400000, guid: 0f61ac8e7b133344a8c85caada586cd7, type: 2}
+    rate: 1
+  - sceneObjectData: {fileID: 11400000, guid: a58893b3d906b984fbf470845512987b, type: 2}
+    rate: 1
+  - sceneObjectData: {fileID: 11400000, guid: decb904c36f185a47a17cee8704435d4, type: 2}
+    rate: 25
+  - sceneObjectData: {fileID: 11400000, guid: 6b69d6de0c3294048ba659a9970f21bb, type: 2}
+    rate: 25
+  - sceneObjectData: {fileID: 11400000, guid: da8d24d6daaccc349b3ed0203068a666, type: 2}
+    rate: 25
+  - sceneObjectData: {fileID: 0}
+    rate: 100

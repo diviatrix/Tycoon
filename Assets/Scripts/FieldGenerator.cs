@@ -5,40 +5,53 @@ using UnityEngine;
 [System.Serializable]
 public struct Object
 {
-    public GameObject prefab;
+    public SceneObjectData sceneObjectData;
     public double rate;
 }
 
 public class FieldGenerator : MonoBehaviour
 {
     public List<Object> objects;
-    public SnapGrid grid;
-    public int seed;
-    private GameData gameData;
-    private GameController gameController;
-    private int[] noiseValues;
-    public List<GameObject> _objects;
+   
+    public List<Object> _objects = new List<Object>();
 
-    private void Awake() 
-    {
-        gameData = GetComponent<GameData>();
-        gameController = GetComponent<GameController>();
-    }
+	private int[] noiseValues;
+	private GameData gameData;
 
-    void makeObjectList()
+
+
+	void OnEnable()
+	{
+		EventManager.OnRecieveGameData += SetGameData;
+	}
+
+	void OnDisable()
+	{
+		EventManager.OnRecieveGameData -= SetGameData;
+	}
+
+	void SetGameData(GameData data)
+	{
+		gameData = data;
+	}
+
+	void makeObjectList()
     {
         foreach (Object o in objects)
         {
             for (int i = 0; i<o.rate;i++)
             {
-                _objects.Add(o.prefab);
+                _objects.Add(o);
             }
         }
     }
 
-    public void Generate()
+    public void Generate(int seed, SnapGrid grid, Transform parent)
     {
-        makeObjectList();
+		objects = gameData.GetAvailableResources();
+
+		makeObjectList();
+
         Random.InitState(seed);
         noiseValues = new int[grid.allPointsOnMap.Count];
         
@@ -48,12 +61,10 @@ public class FieldGenerator : MonoBehaviour
 
             int id = noiseValues[i];
 
-            if (_objects[id] != null)
+            if (_objects[id].sceneObjectData != null)
             {
-                gameController.PlaceObjectWithParams(_objects[id], grid.allPointsOnMap[i], Quaternion.identity);
+                 ObjectPlacer.PlaceObject(_objects[id].sceneObjectData, grid.allPointsOnMap[i], Quaternion.identity, parent);
             }
         }
-
-        GetComponent<Notification>().SetNotification("Location Generated");
     }
 }
