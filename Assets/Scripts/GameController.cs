@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour
 
 	private void Start()
     {
+		gameData.ResetResources();
 		fieldGenerator = gameObject.AddComponent<FieldGenerator>();
 
 		frameMover = gameObject.AddComponent<FrameMover>();
@@ -281,8 +282,6 @@ public class GameController : MonoBehaviour
 
 	void StartFoodReduction()
 	{
-		
-		Debug.Log("Start Consuming food");
 		food.resources.food = gameData.GetBalance().citizen;
 		StartCoroutine(CitizenEatTimer());
 		food.isGathering = true;
@@ -290,6 +289,7 @@ public class GameController : MonoBehaviour
 
 	IEnumerator CitizenEatTimer()
 	{
+		Debug.Log("Consuming 1 food in " + food.perSeconds / food.resources.food + "seconds");
 		Resources consumedFood = new Resources { food = 1 };			
 
 		yield return new WaitForSeconds(food.perSeconds/ food.resources.food);

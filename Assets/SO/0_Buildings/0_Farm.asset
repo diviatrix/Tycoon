@@ -19,7 +19,7 @@ MonoBehaviour:
   buildEffect: {fileID: 0}
   destroyEffect: {fileID: 0}
   objectName: Farm
-  description: Fancy farm, produce 5 food each minute.
+  description: Fancy farm, produce 3 food each minute.
   sprite: {fileID: 21300000, guid: 71e94c14d36ddf549a233b94331a6707, type: 3}
   canBuild: 1
   canSell: 1
@@ -40,5 +40,5 @@ MonoBehaviour:
       food: 1
       copper: 0
       citizen: 0
-    perSeconds: 12
+    perSeconds: 20
     isGathering: 0

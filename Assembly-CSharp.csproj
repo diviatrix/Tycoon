@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scripts\utility\ResourcePerTime.cs" />
     <Compile Include="Assets\Scripts\utility\Resources.cs" />
     <Compile Include="Assets\Scripts\utility\ResourcesSO.cs" />
+    <Compile Include="Assets\Scripts\utility\ShowObjectOnHover.cs" />
     <Compile Include="Assets\Scripts\utility\SwitchSetActive.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Di/tycoon/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

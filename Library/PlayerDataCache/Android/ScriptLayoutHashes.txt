@@ -10,7 +10,7 @@ SceneListEnd?
 c5d2aac41cb0319d68599a8ea752b02f Unity.TextMeshPro.dll:TMPro.TMP_Dropdown
 89a4e352532eb054faed9e9eb3a75af9 Assembly-CSharp.dll:.FieldGenerator
 3b8937bd106673e9b4378db89888c262 Unity.TextMeshPro.dll:TMPro.TMP_ScrollbarEventHandler
-3e6ae91a0672b3a6ae94861cfba9b951 Assembly-CSharp.dll:.SceneObjectData
+2b4a0e3006789feb603f53dd417658e9 Assembly-CSharp.dll:.SceneObjectData
 c1a00417256adceb9e0b05595a34a05f Assembly-CSharp.dll:.CameraController
 3e402a8de2e3e8efd4a4b53fe4a24c72 Assembly-CSharp-firstpass.dll:.SampleInfo
 9f09696ba64c2b1f2d1885af8ffcf92e Unity.Timeline.dll:UnityEngine.Timeline.GroupTrack
@@ -127,9 +127,11 @@ b77f491f4d293c2f571bfcc70033be66 Unity.Timeline.dll:UnityEngine.Timeline.AudioTr
 d0c04467fb1e36d452dc6ca9a01bf69d Unity.Timeline.dll:UnityEngine.Timeline.SignalEmitter
 9f09696ba64c2b1f2d1885af8ffcf92e Unity.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 c6505b33c70b2aebbfc81d83160aa511 Assembly-CSharp.dll:.ObjectPlacer
-ee20cc019966a86697b3b96fe009ac77 Assembly-CSharp.dll:.GameController
+0fc78cd4897b8107d53faa41f742a593 Assembly-CSharp.dll:.GameController
 363b318f81577a6689918f7ea91cd305 Assembly-CSharp.dll:.BuildMenuController
 1cf9262648da95192182a1f424124196 Assembly-CSharp.dll:.ButtonProperty
 22f012497003e0b83efb84e6c334968e Assembly-CSharp.dll:.GameData
 7089ab18176334afabd62b82e9a7f5bd Assembly-CSharp.dll:.SelectionPanelController
 d1a3f4fb83a8466ede64169562f92236 Assembly-CSharp.dll:.ResourceBarController
+eac485247f0eac592d28895ddc8da5fb Assembly-CSharp.dll:.FrameMover
+7185b5922ab496c5835869d2027b805b Assembly-CSharp.dll:.ShowObjectOnHover
