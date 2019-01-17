@@ -54,35 +54,52 @@ public class BuildInfoPanelController : MonoBehaviour
 		copper.SetActive(false);
 		food.SetActive(false);
 
-		if (data.cost.gold > 0)
+		foreach (Resource res in data.cost)
 		{
-			string resText = data.cost.gold.ToString();
-			if (data.cost.gold > gameData.GetBalance().gold) { resText = "<color=#ff0000ff>" + data.cost.gold.ToString() + "</color>"; }
-			SetCostFor(gold, resText);
-		}
-		if (data.cost.wood > 0)
-		{
-			string resText = data.cost.wood.ToString();
-			if (data.cost.wood > gameData.GetBalance().wood) { resText = "<color=#ff0000ff>" + data.cost.wood.ToString() + "</color>"; }
-			SetCostFor(wood, resText);
-		}
-		if (data.cost.stone > 0)
-		{
-			string resText = data.cost.stone.ToString();
-			if (data.cost.stone > gameData.GetBalance().stone) { resText = "<color=#ff0000ff>" + data.cost.stone.ToString() + "</color>"; }
-			SetCostFor(stone, resText);
-		}
-		if (data.cost.copper > 0)
-		{
-			string resText = data.cost.copper.ToString();
-			if (data.cost.copper > gameData.GetBalance().copper) { resText = "<color=#ff0000ff>" + data.cost.copper.ToString() + "</color>"; }
-			SetCostFor(copper, resText);
-		}
-		if (data.cost.food > 0)
-		{
-			string resText = data.cost.food.ToString();
-			if (data.cost.food > gameData.GetBalance().food) { resText = "<color=#ff0000ff>" + data.cost.food.ToString() + "</color>"; }
-			SetCostFor(food, resText);
+			switch(res.type)
+			{
+				case ResourceType.copper: 
+				{
+					string resText = res.amount.ToString();
+					if (res.amount > gameData.GetResourceByType(res.type)) 
+					{ resText = "<color=#ff0000ff>" + res.amount.ToString() + "</color>"; }
+					SetCostFor(copper, resText);
+					break;
+				} 
+				case ResourceType.food: 
+				{
+					string resText = res.amount.ToString();
+					if (res.amount > gameData.GetResourceByType(res.type)) 
+					{ resText = "<color=#ff0000ff>" + res.amount.ToString() + "</color>"; }
+					SetCostFor(food, resText);
+					break;
+				}
+				case ResourceType.gold: 
+				{
+					string resText = res.amount.ToString();
+					if (res.amount > gameData.GetResourceByType(res.type)) 
+					{ resText = "<color=#ff0000ff>" + res.amount.ToString() + "</color>"; }
+					SetCostFor(gold, resText);
+					break;
+				}
+				case ResourceType.stone: 
+				{
+					string resText = res.amount.ToString();
+					if (res.amount > gameData.GetResourceByType(res.type)) 
+					{ resText = "<color=#ff0000ff>" + res.amount.ToString() + "</color>"; }
+					SetCostFor(stone, resText);
+					break;
+				}
+				case ResourceType.wood: 
+				{
+					string resText = res.amount.ToString();
+					if (res.amount > gameData.GetResourceByType(res.type)) 
+					{ resText = "<color=#ff0000ff>" + res.amount.ToString() + "</color>"; }
+					SetCostFor(wood, resText);
+					break;
+				}
+			}
+
 		}
 	}
 

@@ -6,26 +6,42 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+	[Header("Game bindings Settings")]
 	public GameData gameData;
 	public SnapGrid grid;
 	public GameObject framePrefab;
-    public SceneObjectData buildOjbect;
-	public SceneObjectBehavior selectedObject;
-
-    private Vector3 finalPosition = new Vector3();
+	public GameObject citizenPrefab;
+	
+	private SceneObjectData buildOjbect;
+	private SceneObjectBehavior selectedObject;
+	private Vector3 finalPosition = new Vector3();
     private bool isMobile; // check if mobile or pc
-    private float touchDuration;
     private Touch touch;
 	private bool inBuildMode;
 	private SaveSystem saveSystem;
 	private FieldGenerator fieldGenerator;
 	private Transform spawnedObjectsParent;
 	private FrameMover frameMover;
-	private ResourcePerTime food = new ResourcePerTime() { resources = new Resources (), perSeconds = 60, isGathering = false };
+	private ResourcePerTime food = new ResourcePerTime() { resource = new Resource {type = ResourceType.food, amount = 1 }, perSeconds = 60, isGathering = false };
+	private bool isGrowingCitizen = false;
+	private Transform spawnedCitizenParent;
+
+	[Header("Camera Settings")]
+	public Camera cameraComponent;
+	public Transform playerTransform;
+	public float zoomSpeed; // camera zoom speed
+	public float touchZoomSpeed; // 
+	public float camSpeed; // camera move speed
+	public float touchSpeed; // 
+	public float zLimit; // vertical camera limit
 
 	private void Start()
     {
+		cameraComponent = Camera.main;
+		playerTransform = cameraComponent.transform.parent;
+
 		gameData.ResetResources();
+
 		fieldGenerator = gameObject.AddComponent<FieldGenerator>();
 
 		frameMover = gameObject.AddComponent<FrameMover>();
@@ -37,7 +53,7 @@ public class GameController : MonoBehaviour
 		
 		spawnedObjectsParent = new GameObject("Spawned Objects").transform;
 
-		isMobile = Application.isMobilePlatform;		
+		isMobile = Application.isMobilePlatform;
 	}
 
 	public void StartNewGame()
@@ -58,7 +74,6 @@ public class GameController : MonoBehaviour
 		EventManager.OnExitBuildMode += ExitBuildMode;
 		EventManager.OnSelection += SelectObject;
 		EventManager.OnExitSelectMode += ExitSelectMode;
-		EventManager.AddToBalance += ChangePlayerBalance;
 		EventManager.OnRecieveGameData += SetGameData;
 	}
 
@@ -78,8 +93,19 @@ public class GameController : MonoBehaviour
 
 	public void SellSelectedObject()
 	{
-		ChangePlayerBalance(selectedObject.data.cost);
+		foreach(Resource res in selectedObject.data.cost)
+		{
+			if (gameData.GetResourceByType(res.type)+res.amount <= gameData.GetResourceCapacity(res.type))
+			gameData.AddBalanceByType(res.type, res.amount);
+		}
+
 		Destroy(selectedObject.gameObject);
+
+		foreach(Resource res in selectedObject.data.capacity)
+		{
+			gameData.ReduceCapacityByType(res.type, res.amount);
+		}
+
 		EventManager.ExitSelectMode();
 	}
 
@@ -88,9 +114,12 @@ public class GameController : MonoBehaviour
 		selectedObject.transform.Rotate(Vector3.up, 90);
 	}
 
-	public void ChangePlayerBalance(Resources res)
+	public void ChangePlayerBalance(List<Resource> res)
 	{
-		gameData.AddResources(res);
+		foreach(Resource r in res)
+		{
+			gameData.AddBalanceByType(r.type, r.amount);
+		}	
 	}
 
 	void SelectObject(SceneObjectBehavior sob)
@@ -116,56 +145,124 @@ public class GameController : MonoBehaviour
 		inBuildMode = false;
 	}
 
-	void Update()
-    {
-        // ray
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+	void CameraMovementHandler()
+	{
+		playerTransform.position -= playerTransform.right * Input.GetAxis("Mouse X") * camSpeed;
+		playerTransform.position -= playerTransform.forward * Input.GetAxis("Mouse Y") * camSpeed;
+	}
 
-        // always casting
-        if (Physics.Raycast(ray, out hit))
-        {
-            finalPosition = grid.GetNearestPointOnGrid(hit.point);
-        }
+	void CameraZoomHandler()
+	{
+		// camera ortho zoom
 
-        if (isMobile)
-        {
-            if(Input.touchCount > 0)
-            { //if there is any touch
-                touchDuration += Time.deltaTime;
-                touch = Input.GetTouch(0);
+		if (cameraComponent.orthographicSize >= zLimit)
+		{
+			cameraComponent.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+		}
 
-				//making sure it only check the touch once && it was a short touch/tap and not a dragging.
-				if (touch.phase == TouchPhase.Ended && touchDuration < 0.2f && !EventSystem.current.IsPointerOverGameObject()) 
-                {
-                    StartCoroutine("singleOrDouble");
-                }
-            }
-            else
-            {
-                touchDuration = 0.0f;
-            }                
-        }
-        if (Application.isEditor)
-        {
-            // click on objects
-            if (!IsPointerOverUIObject()) // if not over ui
-            {
+		// push to zlimit if camera is too close
+		if (cameraComponent.orthographicSize < zLimit)
+		{
+			cameraComponent.orthographicSize = zLimit;
+		}
+	}
 
-                Transform go = hit.transform;
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if (go != null) HandleObjectsInteraction(go.gameObject, hit.point);
-                }
-            }
+	void CameraController()
+	{
+		// ray
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Input.GetMouseButtonDown(1)) // exit build mode or rmb #todo: rework this, dunno how
-            {
+		// always casting
+		if (Physics.Raycast(ray, out hit))
+		{
+			finalPosition = grid.GetNearestPointOnGrid(hit.point);
+		}
+
+		if (!isMobile)
+		{
+			// camera dnd
+			if (Input.GetMouseButton(2))
+			{
+				CameraMovementHandler();
+			}
+
+			CameraZoomHandler();
+
+			// click on objects
+			if (!IsPointerOverUIObject()) // if not over ui
+			{
+
+				Transform go = hit.transform;
+				if (Input.GetMouseButtonDown(0))
+				{
+					if (go != null) HandleObjectsInteraction(go.gameObject, hit.point);
+				}
+			}
+
+			if (Input.GetMouseButtonDown(1)) // exit build mode or rmb #todo: rework this, dunno how
+			{
 				EventManager.ExitBuildMode();
 				EventManager.ExitSelectMode();
-            }
-        }
-    }
+			}
+		}
+
+		if (isMobile)
+		{
+			if (Input.touchCount > 0)
+			{
+				if (IsPointerOverUIObject())
+				{
+					return; // leave cycle if is over ui
+				}
+				//if there is any touch
+				touch = Input.GetTouch(0);
+
+				// Move the cube if the screen has the finger moving.
+				if (touch.phase == TouchPhase.Moved && Input.touchCount == 1)
+				{
+					playerTransform.position -= playerTransform.right * touch.deltaPosition.x * touchSpeed;
+					playerTransform.position -= playerTransform.forward * touch.deltaPosition.y * touchSpeed;
+				}
+
+				else if (Input.touchCount == 2)
+				{
+					// Store both touches.
+					Touch touchOne = Input.GetTouch(1);
+
+					// Find the position in the previous frame of each touch.
+					Vector2 touchZeroPrevPos = touch.position - touch.deltaPosition;
+					Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+					// Find the magnitude of the vector (the distance) between the touches in each frame.
+					float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+					float touchDeltaMag = (touch.position - touchOne.position).magnitude;
+
+					// Find the difference in the distances between each frame.
+					float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+					// ... change the orthographic size based on the change in distance between the touches.
+					cameraComponent.orthographicSize += deltaMagnitudeDiff * touchZoomSpeed;
+
+					// Make sure the orthographic size never drops below zero.
+					cameraComponent.orthographicSize = Mathf.Max(cameraComponent.orthographicSize, 0.5f);
+				}
+
+				//making sure it only check the touch once && it was a short touch/tap and not a dragging.
+				else
+				if
+					(
+					touch.phase == TouchPhase.Ended &&
+					touch.deltaPosition == new Vector2(0, 0) &&
+					touch.tapCount == 1
+					)
+				{
+					Transform go = hit.transform;
+					if (go != null) HandleObjectsInteraction(go.gameObject, hit.point);
+				}
+			}
+		}
+	}
 
     public void HandleObjectsInteraction(GameObject go, Vector3 point)
     {
@@ -175,13 +272,26 @@ public class GameController : MonoBehaviour
         {
 			if (inBuildMode)
 			{
-				if (gameData.GetBalance() >= buildOjbect.cost)
+				if (gameData.CanBuild(buildOjbect.cost))
 				{
-					gameData.ReduceResources(buildOjbect.cost);
+					
 					EventManager.Message = "Built: " + buildOjbect.objectName;
 					ObjectPlacer.PlaceObject(buildOjbect, grid.GetNearestPointOnGrid(point), Quaternion.identity, spawnedObjectsParent);
+					
+					
+					foreach(Resource res in buildOjbect.cost)
+					{
+						gameData.ReduceBalanceByType(res.type, res.amount);
+					}
+					
+					foreach(Resource res in buildOjbect.capacity)
+					{
+						gameData.AddCapacityByType(res.type, res.amount);
+					}
+
 					// relaunch OnEnterBuildMode event with selected object
 					EventManager.BuildObject = buildOjbect;
+					
 				}
 				else EventManager.Message = "Cant build " + buildOjbect.objectName + ", not enough resources";
 			}
@@ -214,7 +324,7 @@ public class GameController : MonoBehaviour
 	public void Save()
 	{
 		EventManager.Message = ("Saving game");
-		saveSystem.SaveGame(spawnedObjectsParent, gameData.GetBalance());
+		saveSystem.SaveGame(spawnedObjectsParent, gameData.GetBalance(), gameData.GetResourcesCapacity());
 	}
 
 	public void LoadGame()
@@ -222,9 +332,10 @@ public class GameController : MonoBehaviour
 		EventManager.Message = ("Loading game");
 		WipeScene();
 		
-		System.Tuple<List<SceneObjectSaveData>, Resources> loadedData = saveSystem.LoadGame();
+		System.Tuple<List<SceneObjectSaveData>, Resources, Resources> loadedData = saveSystem.LoadGame();
 
 		gameData.SetBalance(loadedData.Item2);
+		gameData.SetCapacity(loadedData.Item3);
 
 		foreach (SceneObjectSaveData so in loadedData.Item1)
 		{
@@ -232,36 +343,6 @@ public class GameController : MonoBehaviour
 		}
 
 		EventManager.Message = ("Game Loaded");
-	}
-
-	IEnumerator singleOrDouble()
-	{
-		// ray
-		RaycastHit hit;
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-		// always casting
-		if (Physics.Raycast(ray, out hit))
-		{
-			finalPosition = grid.GetNearestPointOnGrid(hit.point);
-		}
-
-		yield return new WaitForSeconds(0.15f);
-		if (touch.tapCount == 1)
-		{
-			if (!EventSystem.current.IsPointerOverGameObject()) // if not over ui
-			{
-				Transform go = hit.transform;
-				if (go != null) HandleObjectsInteraction(go.gameObject, hit.point);
-			}
-		}
-
-		else if (touch.tapCount == 2)
-		{
-			//this coroutine has been called twice. We should stop the next one here otherwise we get two double tap
-			StopCoroutine("singleOrDouble");
-			Debug.Log("Double");
-		}
 	}
 
 	public void WipeScene()
@@ -278,25 +359,53 @@ public class GameController : MonoBehaviour
 		{
 			 StartFoodReduction();			
 		}
+
+		if (gameData.GetBalance().citizen < gameData.GetResourcesCapacity().citizen && !isGrowingCitizen)
+		{
+			StartCoroutine(GrowCitizen(1));
+		}
+
+		if (gameData.GetBalance().citizen > gameData.GetResourcesCapacity().citizen && !isGrowingCitizen)
+		{
+			EventManager.Message = "There is not enough houses, some citizen will leave our town soon";
+			StartCoroutine(GrowCitizen(-1));
+		}
+	}
+
+	IEnumerator GrowCitizen(int i)
+	{
+		isGrowingCitizen = true;
+		Debug.Log("Started growing citizen cycle: " + i);
+
+		yield return new WaitForSeconds(10);
+
+		gameData.AddBalanceByType(ResourceType.citizen, i);
+		GameObject citizen = Instantiate(citizenPrefab, GameObject.FindWithTag("TownHall").transform);
+		citizen.transform.Translate(new Vector3(0,0,-1));
+		citizen.transform.Rotate(Vector3.up, -90);
+		isGrowingCitizen = false;
+	}
+
+	private void Update()
+	{
+		CameraController();
 	}
 
 	void StartFoodReduction()
-	{
-		food.resources.food = gameData.GetBalance().citizen;
+	{		
+		food.resource.amount = gameData.GetBalance().citizen;
 		StartCoroutine(CitizenEatTimer());
 		food.isGathering = true;
 	}
 
 	IEnumerator CitizenEatTimer()
 	{
-		Debug.Log("Consuming 1 food in " + food.perSeconds / food.resources.food + "seconds");
-		Resources consumedFood = new Resources { food = 1 };			
+		Debug.Log("Start reduce food by 1 each " + food.perSeconds/ food.resource.amount + "seconds");
+		yield return new WaitForSeconds(food.perSeconds/ food.resource.amount);
 
-		yield return new WaitForSeconds(food.perSeconds/ food.resources.food);
-
-		if (gameData.GetBalance().food > 0)
+		if (gameData.GetBalance().food - food.resource.amount >= 0)
 		{
-			gameData.ReduceResources(consumedFood);			
+			gameData.ReduceBalanceByType (ResourceType.food, 1);			
 		} else EventManager.Message = "Our citizen are starving!";
 		
 		food.isGathering = false;

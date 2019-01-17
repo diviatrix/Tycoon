@@ -19,7 +19,7 @@ MonoBehaviour:
   buildEffect: {fileID: 0}
   destroyEffect: {fileID: 0}
   objectName: Stone Quarry
-  description: Place it near stone rock to harvest it. 10 stone per minute. Requires
+  description: Place it near stone rock to harvest it. 5 stone per minute. Requires
     one worker.
   sprite: {fileID: 21300000, guid: 81c203f840c8a0c479bbcbdb141eb82a, type: 3}
   canBuild: 1
@@ -27,19 +27,18 @@ MonoBehaviour:
   canHarvest: 0
   canRotate: 1
   cost:
-    gold: 0
-    wood: 15
-    stone: 0
-    food: 0
-    copper: 0
-    citizen: 0
-  rpm:
-    resources:
-      gold: 0
-      wood: 0
-      stone: 1
-      food: 0
-      copper: 0
-      citizen: 0
+  - type: 1
+    amount: 35
+  capacity: []
+  plusRpm:
+    resource:
+      type: 2
+      amount: 1
     perSeconds: 12
     isGathering: 0
+  minusRpm:
+    resource:
+      type: 0
+      amount: 0
+    perSeconds: 0
+    isGathering: 1

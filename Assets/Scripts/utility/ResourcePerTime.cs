@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public struct ResourcePerTime
 {
-    public Resources resources;
+    public Resource resource;
     public float perSeconds;
     public bool isGathering;
 }

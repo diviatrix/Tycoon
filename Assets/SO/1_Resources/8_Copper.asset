@@ -25,20 +25,17 @@ MonoBehaviour:
   canSell: 0
   canHarvest: 0
   canRotate: 0
-  cost:
-    gold: 0
-    wood: 0
-    stone: 0
-    food: 0
-    copper: 0
-    citizen: 0
-  rpm:
-    resources:
-      gold: 0
-      wood: 0
-      stone: 0
-      food: 0
-      copper: 0
-      citizen: 0
+  cost: []
+  capacity: []
+  plusRpm:
+    resource:
+      type: 0
+      amount: 0
+    perSeconds: 0
+    isGathering: 1
+  minusRpm:
+    resource:
+      type: 0
+      amount: 0
     perSeconds: 0
     isGathering: 1

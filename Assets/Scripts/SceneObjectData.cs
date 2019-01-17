@@ -23,6 +23,8 @@ public class SceneObjectData : ScriptableObject
     public bool canSell;                        // can we sell it
     public bool canHarvest;                     // can we harvest it
     public bool canRotate;                      // is object player rotatable
-    public Resources cost;                      // cost of this object    
-    public ResourcePerTime rpm;        
+    public List<Resource> cost;                      // cost of this object    
+    public List<Resource> capacity;   
+    public ResourcePerTime plusRpm;
+	public ResourcePerTime minusRpm;
 }

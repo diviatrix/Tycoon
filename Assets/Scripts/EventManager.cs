@@ -112,6 +112,16 @@ public class EventManager : MonoBehaviour
 		set { playerBalance = value; OnChangeBalance?.Invoke(PlayerBalance); }
 	}
 
+	// Event OnSetMaxResources
+	public static event ResourceDelegate OnSetMaxResources;
+
+	private static Resources maxResources;
+	public static Resources MaxResources
+	{
+		get { return maxResources; }
+		set { maxResources = value; OnSetMaxResources?.Invoke(MaxResources); }
+	}
+
 	//
 	//
 	//	Events with GameData

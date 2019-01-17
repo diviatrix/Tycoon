@@ -8,7 +8,8 @@ using System.IO;
 [System.Serializable]
 public class SaveData
 {
-	public Resources resources;
+	public Resources balance;
+	public Resources maxBalance;
 	public string[] sceneObjects;
 }
 
@@ -27,11 +28,12 @@ public class SaveSystem
 		EventManager.Message = ("Gave Saved");
 	}
 
-	public Tuple<List<SceneObjectSaveData>, Resources> LoadGame()
+	public Tuple<List<SceneObjectSaveData>, Resources, Resources> LoadGame() 
 	{
 		Debug.Log("Start Loading");
 		List<SceneObjectSaveData> loadedSO = new List<SceneObjectSaveData>();
-		Resources resources = new Resources();
+		Resources balance = new Resources();
+		Resources maxBalance = new Resources();
 
 		if (File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
 		{
@@ -40,7 +42,9 @@ public class SaveSystem
 			SaveData saveData = (SaveData)bf.Deserialize(file);
 			file.Close();
 
-			resources = saveData.resources;
+			balance = saveData.balance;
+			maxBalance = saveData.maxBalance;
+
 			foreach (string s in saveData.sceneObjects)
 			{
 				loadedSO.Add(JsonUtility.FromJson<SceneObjectSaveData>(s));
@@ -48,10 +52,10 @@ public class SaveSystem
 		}
 
 		Debug.Log ("Data loaded from disk");
-		return Tuple.Create(loadedSO, resources);
+		return Tuple.Create(loadedSO, balance,maxBalance);
 	}
 
-	public void SaveGame(Transform t, Resources r)
+	public void SaveGame(Transform t, Resources balance, Resources maxBalance)
 	{
 		SaveData saveData = new SaveData();
 
@@ -67,7 +71,8 @@ public class SaveSystem
 			saveData.sceneObjects[i] = JsonUtility.ToJson(sosd);
 		}
 
-		saveData.resources = r;
+		saveData.balance = balance;
+		saveData.maxBalance = maxBalance;
 
 		WriteData(saveData);
 	}

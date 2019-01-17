@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class SwitchSetActive : MonoBehaviour
 {
-    public GameObject go;
+    public List<GameObject> go;
 
     public void Switch()
     {
-        go.SetActive(!go.activeSelf);
+		foreach (GameObject g in go)
+		{
+			g.SetActive(!g.activeSelf);
+		}        
     }
 }

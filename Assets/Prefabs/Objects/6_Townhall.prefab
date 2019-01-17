@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2616631576761768740}
   m_Layer: 0
-  m_Name: _townhall
-  m_TagString: Untagged
+  m_Name: 6_Townhall
+  m_TagString: TownHall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

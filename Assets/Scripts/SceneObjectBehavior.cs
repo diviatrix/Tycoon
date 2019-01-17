@@ -7,7 +7,9 @@ public class SceneObjectBehavior : MonoBehaviour
 {
     public SceneObjectData data;
 
-	private ResourcePerTime resourcePerTime;
+	private ResourcePerTime plusRpm;
+	private Resources resCapacity;
+	private GameData gameData;
 
 	public void Start()
     {
@@ -15,10 +17,9 @@ public class SceneObjectBehavior : MonoBehaviour
         AddBg();
         PlayBuildEffect();
 
-		resourcePerTime = data.rpm;
-
-        
-        EventManager.BuiltObject = data;         // send event it is built
+		plusRpm = data.plusRpm;
+		gameData = EventManager.GameData;
+		EventManager.BuiltObject = data;         // send event it is built
     }    
 
     private void AddCollider()
@@ -44,26 +45,27 @@ public class SceneObjectBehavior : MonoBehaviour
             GameObject.Instantiate(data.buildEffect,transform);
         } 
     }
-	void StartProduction()
-	{
-		Debug.Log("Start producing from: " + name);
-		StartCoroutine(ResourceTimer());
-		resourcePerTime.isGathering = true;
-	}
+	
 
 	private void FixedUpdate()
 	{
-		if (!resourcePerTime.isGathering)
+		if (!plusRpm.isGathering && gameData.GetResourceCapacity(plusRpm.resource.type) > gameData.GetResourceByType(plusRpm.resource.type))
 		{
 			StartProduction();
 		}
 	}
 
-	IEnumerator ResourceTimer()
+    void StartProduction()
 	{
-		yield return new WaitForSeconds(resourcePerTime.perSeconds);
-		EventManager.Amount = resourcePerTime.resources;
+		Debug.Log("Start producing from: " + name);
+		StartCoroutine(ResourceTimer());
+		plusRpm.isGathering = true;
+	}
 
-		resourcePerTime.isGathering = false;
+	IEnumerator ResourceTimer()	{
+
+		yield return new WaitForSeconds(plusRpm.perSeconds);
+        gameData.AddBalanceByType(plusRpm.resource.type, plusRpm.resource.amount);
+		plusRpm.isGathering = false;
 	}
 }
