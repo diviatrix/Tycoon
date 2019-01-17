@@ -41,3 +41,5 @@ MonoBehaviour:
       amount: 0
     perSeconds: 0
     isGathering: 1
+  workers: 0
+  maxWorkers: 0

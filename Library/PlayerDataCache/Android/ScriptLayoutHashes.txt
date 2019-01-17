@@ -11,9 +11,9 @@ c5d2aac41cb0319d68599a8ea752b02f Unity.TextMeshPro.dll:TMPro.TMP_Dropdown
 89a4e352532eb054faed9e9eb3a75af9 Assembly-CSharp.dll:.FieldGenerator
 3b8937bd106673e9b4378db89888c262 Unity.TextMeshPro.dll:TMPro.TMP_ScrollbarEventHandler
 1cf9262648da95192182a1f424124196 Assembly-CSharp.dll:.ButtonProperty
-a7722acf22e946c560c301f7ed0f5f06 Assembly-CSharp.dll:.SceneObjectData
+593a6483bfd49a12ab7e26c4adc39704 Assembly-CSharp.dll:.SceneObjectData
 3e402a8de2e3e8efd4a4b53fe4a24c72 Assembly-CSharp-firstpass.dll:.SampleInfo
-4646561d0cce23339e4e64bb37c807d6 Assembly-CSharp.dll:.GameController
+7bf0342abd4925f7f143ee32b18cbcf0 Assembly-CSharp.dll:.GameController
 9f09696ba64c2b1f2d1885af8ffcf92e Unity.Timeline.dll:UnityEngine.Timeline.GroupTrack
 8dab78ab9717a84e76aa39b4a08b36d1 Assembly-CSharp-firstpass.dll:.iTween
 4551fab063f234ee0f24a40e74226408 Unity.Timeline.dll:UnityEngine.Timeline.ActivationTrack
@@ -132,5 +132,6 @@ b77f491f4d293c2f571bfcc70033be66 Unity.Timeline.dll:UnityEngine.Timeline.AudioTr
 c6505b33c70b2aebbfc81d83160aa511 Assembly-CSharp.dll:.ObjectPlacer
 9a1f40c2499d73478196e2653e1be934 Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
 98b3b371395017a40db0a6475b7dd172 Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
+d34dbb2a411c63d1af55eb591051a3dd Assembly-CSharp.dll:.CitizenBehavior
 d0c04467fb1e36d452dc6ca9a01bf69d Unity.Timeline.dll:UnityEngine.Timeline.SignalEmitter
 9f09696ba64c2b1f2d1885af8ffcf92e Unity.Timeline.dll:UnityEngine.Timeline.PlayableTrack

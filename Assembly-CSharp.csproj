@@ -80,6 +80,8 @@
      <Compile Include="Assets\Scripts\utility\ResourcesSO.cs" />
      <Compile Include="Assets\Scripts\utility\ShowObjectOnHover.cs" />
      <Compile Include="Assets\Scripts\utility\SwitchSetActive.cs" />
+     <None Include="Assets\Fantasy_Kingdom_Pack\Demo\Read me01.txt" />
+     <None Include="Assets\Fantasy_Kingdom_Pack\Read me\Read me01.txt" />
      <None Include="Assets\BrokenVector\LowPolyShaders\Shaders\LowPolyPBRShader.shader" />
      <None Include="Assets\BrokenVector\LowPolyShaders\Shaders\LowPolyUnlitShader.shader" />
  <Reference Include="Unity.Timeline.Editor">

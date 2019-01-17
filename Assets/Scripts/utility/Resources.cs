@@ -70,6 +70,34 @@ public struct Resources
         return isBigger;
     }
 
+    public void AddResource(ResourceType res, int amount)
+    {
+        if (res == ResourceType.citizen)
+        {
+            citizen += amount;
+        }
+        if (res == ResourceType.copper)
+        {
+            copper += amount;
+        }
+        if (res == ResourceType.food)
+        {
+            food += amount;
+        }
+        if (res == ResourceType.gold)
+        {
+            gold += amount;
+        }
+        if (res == ResourceType.stone)
+        {
+            stone += amount;
+        }
+        if (res == ResourceType.wood)
+        {
+            wood += amount;
+        }
+    }
+
     public static bool operator <(Resources r1, Resources r2)
     {
         bool isBigger = false;
@@ -130,33 +158,5 @@ public struct Resources
         r1.stone -= r2.stone;
         r1.wood -= r2.wood;
         return r1;
-    }
-
-    public void AddResource(ResourceType res, int amount)
-    {
-        if (res == ResourceType.citizen)
-        {
-            citizen += amount;
-        }
-        if (res == ResourceType.copper)
-        {
-            copper += amount;
-        }
-        if (res == ResourceType.food)
-        {
-            food += amount;
-        }
-        if (res == ResourceType.gold)
-        {
-            gold += amount;
-        }
-        if (res == ResourceType.stone)
-        {
-            stone += amount;
-        }
-        if (res == ResourceType.wood)
-        {
-            wood += amount;
-        }
-    }
+    }    
 }

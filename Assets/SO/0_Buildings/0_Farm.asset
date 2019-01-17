@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
   m_Name: 0_Farm
   m_EditorClassIdentifier: 
-  prefab: {fileID: 5253310918540499647, guid: 733e4084a29fa604291cd5333d8e2bc9, type: 3}
+  prefab: {fileID: 153, guid: 733e4084a29fa604291cd5333d8e2bc9, type: 3}
   bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
     type: 3}
   buildEffect: {fileID: 0}
@@ -41,3 +41,5 @@ MonoBehaviour:
       amount: 0
     perSeconds: 0
     isGathering: 1
+  workers: 0
+  maxWorkers: 1

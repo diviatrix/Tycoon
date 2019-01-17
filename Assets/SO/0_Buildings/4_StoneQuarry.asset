@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
   m_Name: 4_StoneQuarry
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1015376339295905189, guid: 0ed5d67ac69bf3842bcb5fb24b484ffb, type: 3}
+  prefab: {fileID: 122, guid: 0ed5d67ac69bf3842bcb5fb24b484ffb, type: 3}
   bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
     type: 3}
   buildEffect: {fileID: 0}
@@ -29,7 +29,9 @@ MonoBehaviour:
   cost:
   - type: 1
     amount: 35
-  capacity: []
+  capacity:
+  - type: 2
+    amount: 50
   plusRpm:
     resource:
       type: 2
@@ -42,3 +44,5 @@ MonoBehaviour:
       amount: 0
     perSeconds: 0
     isGathering: 1
+  workers: 0
+  maxWorkers: 1

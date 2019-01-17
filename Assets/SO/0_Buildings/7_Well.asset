@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
   m_Name: 7_Well
   m_EditorClassIdentifier: 
-  prefab: {fileID: 4281963748452078914, guid: c878f6a9f5fbf1641b30dd66cabd0959, type: 3}
+  prefab: {fileID: 270, guid: c878f6a9f5fbf1641b30dd66cabd0959, type: 3}
   bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
     type: 3}
   buildEffect: {fileID: 0}

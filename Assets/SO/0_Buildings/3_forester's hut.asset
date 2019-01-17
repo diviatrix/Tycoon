@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
+  m_Name: 3_forester's hut
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 3848313635828911443, guid: 4edb8a19eaeb9ac4280e218223a37fa5, type: 3}
+  bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
+    type: 3}
+  buildEffect: {fileID: 0}
+  destroyEffect: {fileID: 0}
+  objectName: Lumber Hut
+  description: Home for you forest keeper. Her grow trees and gather lumber. Requeres
+    1 worker.
+  sprite: {fileID: 21300000, guid: c9cbd125b927a8141977c96979a59ba7, type: 3}
+  canBuild: 1
+  canSell: 1
+  canHarvest: 0
+  canRotate: 1
+  cost:
+  - type: 1
+    amount: 25
+  capacity:
+  - type: 1
+    amount: 50
+  plusRpm:
+    resource:
+      type: 1
+      amount: 1
+    perSeconds: 12
+    isGathering: 0
+  minusRpm:
+    resource:
+      type: 0
+      amount: 0
+    perSeconds: 0
+    isGathering: 1
+  workers: 0
+  maxWorkers: 1

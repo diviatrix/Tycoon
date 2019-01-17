@@ -27,4 +27,6 @@ public class SceneObjectData : ScriptableObject
     public List<Resource> capacity;   
     public ResourcePerTime plusRpm;
 	public ResourcePerTime minusRpm;
+    public int workers;
+    public int maxWorkers;
 }

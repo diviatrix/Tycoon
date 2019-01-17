@@ -33,7 +33,9 @@ public class GameController : MonoBehaviour
 	public float touchZoomSpeed; // 
 	public float camSpeed; // camera move speed
 	public float touchSpeed; // 
-	public float zLimit; // vertical camera limit
+	public float orthoMinZ; // vertical camera limit
+	public float minCamZ;
+	public float maxCamZ;
 
 	private void Start()
     {
@@ -154,17 +156,34 @@ public class GameController : MonoBehaviour
 	void CameraZoomHandler()
 	{
 		// camera ortho zoom
-
-		if (cameraComponent.orthographicSize >= zLimit)
+		if(cameraComponent.orthographic)
 		{
-			cameraComponent.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
-		}
+			if (cameraComponent.orthographicSize >= orthoMinZ)
+			{
+				cameraComponent.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+			}
 
-		// push to zlimit if camera is too close
-		if (cameraComponent.orthographicSize < zLimit)
-		{
-			cameraComponent.orthographicSize = zLimit;
+			// push to zlimit if camera is too close
+			if (cameraComponent.orthographicSize < orthoMinZ)
+			{
+				cameraComponent.orthographicSize = orthoMinZ;
+			}
 		}
+		else if(!cameraComponent.orthographic)
+		{
+			playerTransform.Translate(Vector3.up * -Input.GetAxis("Mouse ScrollWheel") * zoomSpeed);
+
+			if(playerTransform.position.y < minCamZ)
+			{
+				playerTransform.position = new Vector3(playerTransform.position.x, minCamZ, playerTransform.position.z);
+			}
+
+			if(playerTransform.position.y > maxCamZ)
+			{
+				playerTransform.position = new Vector3(playerTransform.position.x, maxCamZ, playerTransform.position.z);
+			}
+		}
+		
 	}
 
 	void CameraController()
@@ -243,9 +262,21 @@ public class GameController : MonoBehaviour
 
 					// ... change the orthographic size based on the change in distance between the touches.
 					cameraComponent.orthographicSize += deltaMagnitudeDiff * touchZoomSpeed;
+					
+					playerTransform.Translate(Vector3.up * deltaMagnitudeDiff * touchZoomSpeed);
 
 					// Make sure the orthographic size never drops below zero.
 					cameraComponent.orthographicSize = Mathf.Max(cameraComponent.orthographicSize, 0.5f);
+
+					if(playerTransform.position.y < minCamZ)
+					{
+						playerTransform.position = new Vector3(playerTransform.position.x, minCamZ, playerTransform.position.z);
+					}
+
+					if(playerTransform.position.y > maxCamZ)
+					{
+						playerTransform.position = new Vector3(playerTransform.position.x, maxCamZ, playerTransform.position.z);
+					}					
 				}
 
 				//making sure it only check the touch once && it was a short touch/tap and not a dragging.
@@ -254,7 +285,8 @@ public class GameController : MonoBehaviour
 					(
 					touch.phase == TouchPhase.Ended &&
 					touch.deltaPosition == new Vector2(0, 0) &&
-					touch.tapCount == 1
+					touch.tapCount == 1 &&
+					!EventSystem.current.IsPointerOverGameObject()
 					)
 				{
 					Transform go = hit.transform;
@@ -380,9 +412,9 @@ public class GameController : MonoBehaviour
 		yield return new WaitForSeconds(10);
 
 		gameData.AddBalanceByType(ResourceType.citizen, i);
-		GameObject citizen = Instantiate(citizenPrefab, GameObject.FindWithTag("TownHall").transform);
-		citizen.transform.Translate(new Vector3(0,0,-1));
-		citizen.transform.Rotate(Vector3.up, -90);
+		//GameObject citizen = Instantiate(citizenPrefab, GameObject.FindWithTag("TownHall").transform);
+		//citizen.transform.Translate(new Vector3(0,0,-1));
+		//citizen.transform.Rotate(Vector3.up, -90);
 		isGrowingCitizen = false;
 	}
 

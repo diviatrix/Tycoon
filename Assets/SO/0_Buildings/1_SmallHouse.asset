@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
   m_Name: 1_SmallHouse
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7999873015459388115, guid: 7d0292b96260707498c6ba78c5337b59, type: 3}
+  prefab: {fileID: 180, guid: 7d0292b96260707498c6ba78c5337b59, type: 3}
   bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
     type: 3}
   buildEffect: {fileID: 0}
@@ -43,3 +43,5 @@ MonoBehaviour:
       amount: 0
     perSeconds: 0
     isGathering: 1
+  workers: 0
+  maxWorkers: 0

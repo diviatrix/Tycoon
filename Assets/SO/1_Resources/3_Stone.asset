@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
+  m_Name: 3_Stone
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 161, guid: 2823cf3583b9b98469bdac714fdc0523, type: 3}
+  bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
+    type: 3}
+  buildEffect: {fileID: 0}
+  destroyEffect: {fileID: 0}
+  objectName: Stone Rock
+  description: Place Stone Quarry close to it to harvest.
+  sprite: {fileID: 21300000, guid: 9c9696eeec011954988c2d13e64c3ef7, type: 3}
+  canBuild: 0
+  canSell: 0
+  canHarvest: 0
+  canRotate: 0
+  cost: []
+  capacity: []
+  plusRpm:
+    resource:
+      type: 0
+      amount: 0
+    perSeconds: 0
+    isGathering: 1
+  minusRpm:
+    resource:
+      type: 0
+      amount: 0
+    perSeconds: 0
+    isGathering: 1
+  workers: 0
+  maxWorkers: 0

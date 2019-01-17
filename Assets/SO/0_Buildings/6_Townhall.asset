@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
   m_Name: 6_Townhall
   m_EditorClassIdentifier: 
-  prefab: {fileID: 8108589841814934654, guid: af12a7455ac01044aa029ae3ec4c5f3a, type: 3}
+  prefab: {fileID: 182, guid: af12a7455ac01044aa029ae3ec4c5f3a, type: 3}
   bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
     type: 3}
   buildEffect: {fileID: 0}
