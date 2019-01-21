@@ -18,15 +18,15 @@ MonoBehaviour:
     citizen: 0
     food: 25
     gold: 25
-    stone: 25
-    wood: 75
+    stone: 100
+    wood: 150
   resources:
-    copper: 10
-    citizen: 6
-    food: 35
-    gold: 0
-    stone: 11
-    wood: 12
+    copper: 0
+    citizen: 0
+    food: 25
+    gold: 25
+    stone: 100
+    wood: 150
   startMaxResources:
     copper: 0
     citizen: 0
@@ -35,12 +35,12 @@ MonoBehaviour:
     stone: 0
     wood: 0
   maxResources:
-    copper: 25
-    citizen: 6
-    food: 50
+    copper: 0
+    citizen: 0
+    food: 0
     gold: 0
-    stone: 100
-    wood: 100
+    stone: 0
+    wood: 0
   buildObjects:
   - {fileID: 11400000, guid: cf18c93b25420a6449c69afece11e93c, type: 2}
   - {fileID: 11400000, guid: be835f0ffca260b429b9933f88a7aff8, type: 2}

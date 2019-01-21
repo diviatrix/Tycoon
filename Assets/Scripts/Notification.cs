@@ -7,18 +7,24 @@ public class Notification : MonoBehaviour
 {
     public Text text;
 
+		void Start()
+		{
+			text.text = "";
+		}
+
     void OnEnable()
     {
-		EventManager.OnSendNotification += SetNotification;
-	}
+        EventManager.OnSendNotification += SetNotification;
+    }
 
     void OnDisable()
     {
-		EventManager.OnSendNotification -= SetNotification;
-	}
+        EventManager.OnSendNotification -= SetNotification;
+    }
 
-	public void SetNotification(string s)
-	{
-		text.text = s;
-	}
+    public void SetNotification(string s)
+    {
+        GetComponent<ScrollRect>().verticalNormalizedPosition = 0;
+        text.text += s + "\n";
+    }
 }

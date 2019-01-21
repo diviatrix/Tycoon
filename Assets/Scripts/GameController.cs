@@ -8,7 +8,8 @@ public class GameController : MonoBehaviour
 {
 	[Header("Game bindings Settings")]
 	public GameData gameData;
-	public SnapGrid grid;
+	//public SnapGrid grid;
+	public MapGenerator mapGenerator;
 	public GameObject framePrefab;
 	public GameObject citizenPrefab;
 	
@@ -19,8 +20,9 @@ public class GameController : MonoBehaviour
     private Touch touch;
 	private bool inBuildMode;
 	private SaveSystem saveSystem;
-	private FieldGenerator fieldGenerator;
+	//private FieldGenerator fieldGenerator;
 	private Transform spawnedObjectsParent;
+	private Transform tileParent;
 	private FrameMover frameMover;
 	private ResourcePerTime food = new ResourcePerTime() { resource = new Resource {type = ResourceType.food, amount = 1 }, perSeconds = 60, isGathering = false };
 	private bool isGrowingCitizen = false;
@@ -44,7 +46,7 @@ public class GameController : MonoBehaviour
 
 		gameData.ResetResources();
 
-		fieldGenerator = gameObject.AddComponent<FieldGenerator>();
+		//fieldGenerator = gameObject.AddComponent<FieldGenerator>();
 
 		frameMover = gameObject.AddComponent<FrameMover>();
 		frameMover.framePrefab = framePrefab;
@@ -54,6 +56,7 @@ public class GameController : MonoBehaviour
 		saveSystem = new SaveSystem();
 		
 		spawnedObjectsParent = new GameObject("Spawned Objects").transform;
+		tileParent = new GameObject("Tile parent").transform;
 
 		isMobile = Application.isMobilePlatform;
 	}
@@ -61,7 +64,8 @@ public class GameController : MonoBehaviour
 	public void StartNewGame()
 	{
 		WipeScene();
-		fieldGenerator.Generate(228, grid, spawnedObjectsParent);
+		mapGenerator.Regenerate(tileParent, spawnedObjectsParent);
+		//fieldGenerator.Generate(228, grid, spawnedObjectsParent);
 		gameData.ResetResources();
 	}
 
@@ -95,20 +99,24 @@ public class GameController : MonoBehaviour
 
 	public void SellSelectedObject()
 	{
+		string message = "";
 		foreach(Resource res in selectedObject.data.cost)
 		{
 			if (gameData.GetResourceByType(res.type)+res.amount <= gameData.GetResourceCapacity(res.type))
 			gameData.AddBalanceByType(res.type, res.amount);
+			message += "Added :" + res.type + ":" + res.amount + "\n";
 		}
-
+		
 		Destroy(selectedObject.gameObject);
 
 		foreach(Resource res in selectedObject.data.capacity)
 		{
 			gameData.ReduceCapacityByType(res.type, res.amount);
+			message += "Reduced Capacity:" + res.type + ":" + res.amount + "\n";
 		}
 
 		EventManager.ExitSelectMode();
+		EventManager.Message = message;
 	}
 
 	public void RotateSelectedObject()
@@ -127,7 +135,7 @@ public class GameController : MonoBehaviour
 	void SelectObject(SceneObjectBehavior sob)
 	{
 		selectedObject = sob;
-		EventManager.Message = "Selected " + sob.data.objectName;
+		//EventManager.Message = "Selected " + sob.data.objectName;
 	}
 
 	void EnterBuildMode(SceneObjectData data)
@@ -139,7 +147,7 @@ public class GameController : MonoBehaviour
 	void ExitSelectMode()
 	{
 		selectedObject = null;
-		EventManager.Message = "";
+		//EventManager.Message = "";
 	}
 
 	void ExitBuildMode()
@@ -193,10 +201,7 @@ public class GameController : MonoBehaviour
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 		// always casting
-		if (Physics.Raycast(ray, out hit))
-		{
-			finalPosition = grid.GetNearestPointOnGrid(hit.point);
-		}
+		Physics.Raycast(ray, out hit);
 
 		if (!isMobile)
 		{
@@ -215,7 +220,12 @@ public class GameController : MonoBehaviour
 				Transform go = hit.transform;
 				if (Input.GetMouseButtonDown(0))
 				{
-					if (go != null) HandleObjectsInteraction(go.gameObject, hit.point);
+					if (go != null) 
+					{
+						HandleObjectsInteraction(go.gameObject, hit.point);
+						Debug.Log("hit: " + go.name);
+					}
+					
 				}
 			}
 
@@ -299,30 +309,33 @@ public class GameController : MonoBehaviour
     public void HandleObjectsInteraction(GameObject go, Vector3 point)
     {
         // build stuff, check if clicked snapgrid
-        SnapGrid clickedGrid = go.GetComponent<SnapGrid>();
-        if (clickedGrid)
+        TileBehavior clickedTile = go.GetComponent<TileBehavior>();
+        if (clickedTile)
         {
 			if (inBuildMode)
 			{
 				if (gameData.CanBuild(buildOjbect.cost))
 				{
+					string message = "";
 					
-					EventManager.Message = "Built: " + buildOjbect.objectName;
-					ObjectPlacer.PlaceObject(buildOjbect, grid.GetNearestPointOnGrid(point), Quaternion.identity, spawnedObjectsParent);
-					
+					//EventManager.Message = "Built: " + buildOjbect.objectName;
+					ObjectPlacer.PlaceObject(buildOjbect, clickedTile.transform.position, Quaternion.identity, spawnedObjectsParent);					
 					
 					foreach(Resource res in buildOjbect.cost)
 					{
 						gameData.ReduceBalanceByType(res.type, res.amount);
+						message += "Spend Resource:" + res.type + ":" + res.amount + "\n";
 					}
 					
 					foreach(Resource res in buildOjbect.capacity)
 					{
 						gameData.AddCapacityByType(res.type, res.amount);
+						message += "Added Capacity:" + res.type + ":" + res.amount + "\n";
 					}
 
 					// relaunch OnEnterBuildMode event with selected object
 					EventManager.BuildObject = buildOjbect;
+					EventManager.Message = message;
 					
 				}
 				else EventManager.Message = "Cant build " + buildOjbect.objectName + ", not enough resources";
@@ -356,7 +369,8 @@ public class GameController : MonoBehaviour
 	public void Save()
 	{
 		EventManager.Message = ("Saving game");
-		saveSystem.SaveGame(spawnedObjectsParent, gameData.GetBalance(), gameData.GetResourcesCapacity());
+		saveSystem.SaveGame(spawnedObjectsParent, tileParent,  gameData.GetBalance(), gameData.GetResourcesCapacity(), playerTransform.position);
+		Debug.Log(playerTransform.position);
 	}
 
 	public void LoadGame()
@@ -364,14 +378,23 @@ public class GameController : MonoBehaviour
 		EventManager.Message = ("Loading game");
 		WipeScene();
 		
-		System.Tuple<List<SceneObjectSaveData>, Resources, Resources> loadedData = saveSystem.LoadGame();
+		SaveData loadedData = saveSystem.LoadGame();
 
-		gameData.SetBalance(loadedData.Item2);
-		gameData.SetCapacity(loadedData.Item3);
+		gameData.SetBalance(loadedData.balance);
+		gameData.SetCapacity(loadedData.maxBalance);
+		playerTransform.position = JsonUtility.FromJson<Vector3>(loadedData.playerPosition);
 
-		foreach (SceneObjectSaveData so in loadedData.Item1)
+		foreach (string s in loadedData.sceneObjects)
 		{
+			SceneObjectSaveData so = JsonUtility.FromJson<SceneObjectSaveData>(s);
 			ObjectPlacer.PlaceObject(so.data, so.position, so.rotation,spawnedObjectsParent);
+		}
+
+		foreach (string s in loadedData.tileObjects)
+		{
+			TileSaveData tsd = JsonUtility.FromJson<TileSaveData>(s);
+			//Debug.Log(s);
+			ObjectPlacer.PlaceTile(tsd.tileData, tsd.position, tsd.rotation,tileParent);
 		}
 
 		EventManager.Message = ("Game Loaded");
@@ -380,6 +403,10 @@ public class GameController : MonoBehaviour
 	public void WipeScene()
 	{
 		foreach (Transform child in spawnedObjectsParent)
+		{
+			Destroy(child.gameObject);
+		}
+		foreach (Transform child in tileParent)
 		{
 			Destroy(child.gameObject);
 		}

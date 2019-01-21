@@ -41,3 +41,4 @@ MonoBehaviour:
     isGathering: 1
   workers: 0
   maxWorkers: 0
+  isTile: 0

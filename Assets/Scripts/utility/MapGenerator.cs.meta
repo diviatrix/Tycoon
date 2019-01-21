@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6e9df35aae9488045acd8de7326bc9bc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - dirtPrefab: {instanceID: 0}
+  - spr1: {fileID: 2800000, guid: d4398d92045a77c4a9f0fdf39d6f211c, type: 3}
+  - spr2: {fileID: 2800000, guid: 4dee53783b204df41a30d3bc1d6473e5, type: 3}
+  - spr3: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

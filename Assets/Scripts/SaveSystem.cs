@@ -6,15 +6,84 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 [System.Serializable]
-public class SaveData
+public struct SaveData
 {
 	public Resources balance;
 	public Resources maxBalance;
 	public string[] sceneObjects;
+	public string[] tileObjects;
+	public string playerPosition;
 }
 
 public class SaveSystem
 {
+
+	public SaveData LoadGame() 
+	{
+		Debug.Log("Start Loading");
+		Debug.Log(Application.persistentDataPath);
+		SaveData saveData = new SaveData();
+
+		if (File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
+		{
+			BinaryFormatter bf = new BinaryFormatter();
+			FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
+			saveData = (SaveData)bf.Deserialize(file);
+			file.Close();
+			Debug.Log ("Data loaded from disk");
+		}
+		else 
+		{
+			Debug.Log("Save data not found on disk");
+		}
+
+		
+		return saveData;
+	}
+
+	public void SaveGame(Transform soTransform, Transform tileTransform, Resources balance, Resources maxBalance, Vector3 playerPosition)
+	{
+		SaveData saveData = new SaveData();
+
+		saveData.sceneObjects = new string[soTransform.childCount];
+
+		for (int i = 0; i < soTransform.childCount; i++)
+		{
+			SceneObjectSaveData sosd = new SceneObjectSaveData();
+			if (soTransform.GetChild(i).GetComponent<SceneObjectBehavior>() != null)
+			{
+				sosd.data = soTransform.GetChild(i).GetComponent<SceneObjectBehavior>().data;
+			}
+			
+			sosd.position = soTransform.GetChild(i).position;
+			sosd.rotation = soTransform.GetChild(i).rotation;
+
+			saveData.sceneObjects[i] = JsonUtility.ToJson(sosd);
+		}
+
+		saveData.tileObjects = new string[tileTransform.childCount];
+
+		for (int i = 0; i < tileTransform.childCount; i++)
+		{
+			
+
+			TileSaveData tsd = new TileSaveData();
+			tsd.tileData = tileTransform.GetChild(i).GetComponent<TileBehavior>().tileData;			
+			tsd.position = tileTransform.GetChild(i).position;
+			tsd.rotation = tileTransform.GetChild(i).rotation;
+
+			//Debug.Log(JsonUtility.ToJson(tsd));
+
+			saveData.tileObjects[i] = JsonUtility.ToJson(tsd);
+		}
+
+		saveData.balance = balance;
+		saveData.maxBalance = maxBalance;
+		saveData.playerPosition = JsonUtility.ToJson(playerPosition);
+
+		WriteData(saveData);
+	}
+
 	public void WriteData(SaveData saveData)
 	{
 		// load file if exist
@@ -26,54 +95,5 @@ public class SaveSystem
 		file.Close();
 
 		EventManager.Message = ("Gave Saved");
-	}
-
-	public Tuple<List<SceneObjectSaveData>, Resources, Resources> LoadGame() 
-	{
-		Debug.Log("Start Loading");
-		List<SceneObjectSaveData> loadedSO = new List<SceneObjectSaveData>();
-		Resources balance = new Resources();
-		Resources maxBalance = new Resources();
-
-		if (File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
-		{
-			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-			SaveData saveData = (SaveData)bf.Deserialize(file);
-			file.Close();
-
-			balance = saveData.balance;
-			maxBalance = saveData.maxBalance;
-
-			foreach (string s in saveData.sceneObjects)
-			{
-				loadedSO.Add(JsonUtility.FromJson<SceneObjectSaveData>(s));
-			}
-		}
-
-		Debug.Log ("Data loaded from disk");
-		return Tuple.Create(loadedSO, balance,maxBalance);
-	}
-
-	public void SaveGame(Transform t, Resources balance, Resources maxBalance)
-	{
-		SaveData saveData = new SaveData();
-
-		saveData.sceneObjects = new string[t.childCount];
-
-		for (int i = 0; i < t.childCount; i++)
-		{
-			SceneObjectSaveData sosd = new SceneObjectSaveData();
-			sosd.data = t.GetChild(i).GetComponent<SceneObjectBehavior>().data;
-			sosd.position = t.GetChild(i).position;
-			sosd.rotation = t.GetChild(i).rotation;
-
-			saveData.sceneObjects[i] = JsonUtility.ToJson(sosd);
-		}
-
-		saveData.balance = balance;
-		saveData.maxBalance = maxBalance;
-
-		WriteData(saveData);
 	}
 }

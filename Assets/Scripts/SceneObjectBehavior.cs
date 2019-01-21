@@ -30,10 +30,6 @@ public class SceneObjectBehavior : MonoBehaviour
     }
     private void AddBg()
     {
-        if(!data.bgPrefab)
-        {
-            return;
-        }
         GameObject bg = GameObject.Instantiate(data.bgPrefab,transform.position,Quaternion.identity);
         bg.transform.SetParent(transform);        
     }
@@ -41,9 +37,7 @@ public class SceneObjectBehavior : MonoBehaviour
     private void PlayBuildEffect()
     {
         if (data.buildEffect != null)
-        {
-            GameObject.Instantiate(data.buildEffect,transform);
-        } 
+        GameObject.Instantiate(data.buildEffect,transform);        
     }
 	
 
@@ -67,5 +61,6 @@ public class SceneObjectBehavior : MonoBehaviour
 		yield return new WaitForSeconds(plusRpm.perSeconds);
         gameData.AddBalanceByType(plusRpm.resource.type, plusRpm.resource.amount);
 		plusRpm.isGathering = false;
+        EventManager.Message = ("Produced "+ plusRpm.resource.type + ": " + plusRpm.resource.amount);
 	}
 }
