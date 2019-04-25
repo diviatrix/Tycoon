@@ -75,6 +75,7 @@
      <Compile Include="Assets\Scripts\TileBehavior.cs" />
      <Compile Include="Assets\Scripts\TileData.cs" />
      <Compile Include="Assets\Scripts\Tweens\popupTween.cs" />
+     <Compile Include="Assets\Scripts\Tweens\resourcePopupManager.cs" />
      <Compile Include="Assets\Scripts\utility\ButtonProperty.cs" />
      <Compile Include="Assets\Scripts\utility\CitizenBehavior.cs" />
      <Compile Include="Assets\Scripts\utility\MapGenerator.cs" />

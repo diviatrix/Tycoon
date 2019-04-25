@@ -60,6 +60,7 @@ public class SceneObjectBehavior : MonoBehaviour
 
 		yield return new WaitForSeconds(plusRpm.perSeconds);
         gameData.AddBalanceByType(plusRpm.resource.type, plusRpm.resource.amount);
+        resourcePopupManager.PopResBubble(transform, plusRpm.resource.type, plusRpm.resource.amount);
 		plusRpm.isGathering = false;
         EventManager.Message = ("Produced "+ plusRpm.resource.type + ": " + plusRpm.resource.amount);
 	}
