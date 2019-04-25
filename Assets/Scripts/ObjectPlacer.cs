@@ -17,14 +17,16 @@ public class ObjectPlacer : MonoBehaviour
 		return go;
     }
 
-    public static GameObject PlaceTile(TileData data, Vector3 position, Quaternion rotation, Transform parent)
+    public static GameObject PlaceTile(TileData data, Vector3 position, Quaternion rotation, Texture tex, Transform parent)
     {
-        GameObject go = GameObject.Instantiate(data.prefab, position, rotation);
+        GameObject go = GameObject.Instantiate(data.prefab, position, rotation );
         go.name = "Tile";
 		go.transform.SetParent(parent);
+        go.GetComponentInChildren<Renderer>().material.mainTexture = tex;
 
         TileBehavior tb = go.AddComponent<TileBehavior>();        
         tb.tileData = data;
+        tb.texture = tex;
 
 		return go;
     }

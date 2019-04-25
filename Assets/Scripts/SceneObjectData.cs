@@ -29,4 +29,5 @@ public class SceneObjectData : ScriptableObject
 	public ResourcePerTime minusRpm;
     public int workers;
     public int maxWorkers;
+    public float areaOfInterest;
 }

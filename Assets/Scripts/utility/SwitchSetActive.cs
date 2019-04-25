@@ -8,9 +8,9 @@ public class SwitchSetActive : MonoBehaviour
 
     public void Switch()
     {
-		foreach (GameObject g in go)
-		{
-			g.SetActive(!g.activeSelf);
-		}        
+      foreach (GameObject g in go)
+      {
+        g.SetActive(!g.activeSelf);
+      }        
     }
 }

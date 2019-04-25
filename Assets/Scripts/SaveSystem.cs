@@ -36,7 +36,6 @@ public class SaveSystem
 		{
 			Debug.Log("Save data not found on disk");
 		}
-
 		
 		return saveData;
 	}
@@ -65,14 +64,11 @@ public class SaveSystem
 
 		for (int i = 0; i < tileTransform.childCount; i++)
 		{
-			
-
 			TileSaveData tsd = new TileSaveData();
 			tsd.tileData = tileTransform.GetChild(i).GetComponent<TileBehavior>().tileData;			
 			tsd.position = tileTransform.GetChild(i).position;
 			tsd.rotation = tileTransform.GetChild(i).rotation;
-
-			//Debug.Log(JsonUtility.ToJson(tsd));
+			tsd.texture = tileTransform.GetChild(i).GetComponent<TileBehavior>().texture;
 
 			saveData.tileObjects[i] = JsonUtility.ToJson(tsd);
 		}

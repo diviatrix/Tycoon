@@ -20,7 +20,6 @@ public class GameController : MonoBehaviour
     private Touch touch;
 	private bool inBuildMode;
 	private SaveSystem saveSystem;
-	//private FieldGenerator fieldGenerator;
 	private Transform spawnedObjectsParent;
 	private Transform tileParent;
 	private FrameMover frameMover;
@@ -46,8 +45,6 @@ public class GameController : MonoBehaviour
 
 		gameData.ResetResources();
 
-		//fieldGenerator = gameObject.AddComponent<FieldGenerator>();
-
 		frameMover = gameObject.AddComponent<FrameMover>();
 		frameMover.framePrefab = framePrefab;
 
@@ -65,7 +62,6 @@ public class GameController : MonoBehaviour
 	{
 		WipeScene();
 		mapGenerator.Regenerate(tileParent, spawnedObjectsParent);
-		//fieldGenerator.Generate(228, grid, spawnedObjectsParent);
 		gameData.ResetResources();
 	}
 
@@ -394,7 +390,7 @@ public class GameController : MonoBehaviour
 		{
 			TileSaveData tsd = JsonUtility.FromJson<TileSaveData>(s);
 			//Debug.Log(s);
-			ObjectPlacer.PlaceTile(tsd.tileData, tsd.position, tsd.rotation,tileParent);
+			ObjectPlacer.PlaceTile(tsd.tileData, tsd.position, tsd.rotation, tsd.texture, tileParent);
 		}
 
 		EventManager.Message = ("Game Loaded");
@@ -440,8 +436,6 @@ public class GameController : MonoBehaviour
 
 		gameData.AddBalanceByType(ResourceType.citizen, i);
 		//GameObject citizen = Instantiate(citizenPrefab, GameObject.FindWithTag("TownHall").transform);
-		//citizen.transform.Translate(new Vector3(0,0,-1));
-		//citizen.transform.Rotate(Vector3.up, -90);
 		isGrowingCitizen = false;
 	}
 

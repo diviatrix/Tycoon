@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 [System.Serializable]
 public struct GenerationZone
@@ -25,13 +26,20 @@ public class MapGenerator : MonoBehaviour {
     public TileData tile;
     private GameObject go;
     public List<GenerationZone> zones;
-    public float sizeX = 100;
-    public float sizeZ = 100;
-    public float perlinModifierX;
-    public float perlinModifierZ;
-    public float perlin2ModifierX;
-    public float perlin2ModifierZ;
+    public float size = 100;
+    public float perlinModifier;
+    public float perlin2Modifier;
     public int seed;
+
+
+    public void SetSeed(InputField input)
+    {
+        seed = int.Parse(input.text);
+    }
+    public void SetSize(InputField input)
+    {
+        size = int.Parse(input.text);
+    }
     
     void WipeScene()
     {
@@ -40,36 +48,35 @@ public class MapGenerator : MonoBehaviour {
             Destroy(t.gameObject);
         }
     }
- 
+
     public void Regenerate(Transform tileParent, Transform soParent)
     {
         WipeScene();
         Random.InitState(seed);
-        for (float  i = 0; i < sizeX; i++)
+        for (float  i = 0; i < size; i++) // for each grid tile 
         {
-            for (float j = 0; j < sizeZ; j++)
+            for (float j = 0; j < size; j++)
             {
-                var perlin = Mathf.PerlinNoise(i/perlinModifierX, j/perlinModifierZ);
-                GameObject go = ObjectPlacer.PlaceTile(tile, new Vector3(i, 0, j), Quaternion.identity, tileParent);
-                //go = (GameObject)Instantiate(dirtPrefab, new Vector3(i, 0, j), Quaternion.identity);
-                //go.transform.SetParent(transform);
+                var perlin = Mathf.PerlinNoise(seed+i/perlinModifier, seed+j/perlinModifier); // get perlin random
 
-                foreach (GenerationZone zone in zones)
+                GameObject go = ObjectPlacer.PlaceTile(tile, new Vector3(i, 0, j), Quaternion.identity, null, tileParent); // place empty tile
+
+                foreach (GenerationZone zone in zones) // for each generated tile and for each Zone defined in editor
                 {
-                    if (perlin > zone.minRate && perlin < zone.maxRate)
+                    if (perlin > zone.minRate && perlin < zone.maxRate) // grab settings by perlin random
                     {                        
-                        go.GetComponentInChildren<Renderer>().material.mainTexture = zone.texture;
+                        go.GetComponentInChildren<Renderer>().material.mainTexture = zone.texture; // change texture of tile by zone
+                        go.GetComponent<TileBehavior>().texture = zone.texture; // and set it in tilescript, TODO: make it happen iside script
                         
-                        var perlin2 = Mathf.PerlinNoise(i/perlin2ModifierX, j/perlin2ModifierZ);
+                        var perlin2 = Mathf.PerlinNoise(seed+i/perlin2Modifier, seed+j/perlin2Modifier); //one more perlin random inside zone for objects on tiles
+
                         foreach (ZoneObject zo in zone.ZoneObjects)
                         {
-                            if (perlin2 > zo.minRate && perlin2 < zo.maxRate)
+                            if (perlin2 > zo.minRate && perlin2 < zo.maxRate) // randomize object
                             {
                                 if(zo.sceneObjectData != null)
                                 {
-                                    ObjectPlacer.PlaceObject(zo.sceneObjectData,go.transform.position, Quaternion.identity, soParent);
-                                    //GameObject obj = Instantiate(zo.sceneObjectData.prefab, go.transform.position, Quaternion.identity);
-                                    //obj.transform.SetParent(transform);
+                                    ObjectPlacer.PlaceObject(zo.sceneObjectData,go.transform.position, Quaternion.identity, soParent); //
                                 }                                
                             }                                 
                         }

@@ -18,4 +18,6 @@ public class TileSaveData
 	public Vector3 position;
 	[SerializeField]
 	public Quaternion rotation;
+    [SerializeField]
+	public Texture texture;
 }
