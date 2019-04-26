@@ -10,6 +10,7 @@ public class SceneObjectBehavior : MonoBehaviour
 	private ResourcePerTime plusRpm;
 	private Resources resCapacity;
 	private GameData gameData;
+    private resourcePopupManager rpm;
 
 	public void Start()
     {
@@ -19,7 +20,8 @@ public class SceneObjectBehavior : MonoBehaviour
 
 		plusRpm = data.plusRpm;
 		gameData = EventManager.GameData;
-		EventManager.BuiltObject = data;         // send event it is built
+        rpm = EventManager.RPM;
+		EventManager.BuiltObject = this;         // send event it is built
     }    
 
     private void AddCollider()
@@ -60,7 +62,7 @@ public class SceneObjectBehavior : MonoBehaviour
 
 		yield return new WaitForSeconds(plusRpm.perSeconds);
         gameData.AddBalanceByType(plusRpm.resource.type, plusRpm.resource.amount);
-        resourcePopupManager.PopResBubble(transform, plusRpm.resource.type, plusRpm.resource.amount);
+        rpm.ResBubble(transform, plusRpm.resource.type, plusRpm.resource.amount);
 		plusRpm.isGathering = false;
         EventManager.Message = ("Produced "+ plusRpm.resource.type + ": " + plusRpm.resource.amount);
 	}

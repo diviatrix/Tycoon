@@ -9,6 +9,7 @@ public class SceneObjectData : ScriptableObject
     [Header("Prefab settings")]
     public GameObject prefab;                   // object prefab
     public GameObject bgPrefab;                 // background prefab
+    public GameObject popupPrefab;
 
     [Header("Effect settings")]
     public GameObject buildEffect;              // effect when you build object

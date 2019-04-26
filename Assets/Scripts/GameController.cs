@@ -26,6 +26,7 @@ public class GameController : MonoBehaviour
 	private ResourcePerTime food = new ResourcePerTime() { resource = new Resource {type = ResourceType.food, amount = 1 }, perSeconds = 60, isGathering = false };
 	private bool isGrowingCitizen = false;
 	private Transform spawnedCitizenParent;
+    public Transform townHall;
 
 	[Header("Camera Settings")]
 	public Camera cameraComponent;
@@ -61,8 +62,8 @@ public class GameController : MonoBehaviour
 	public void StartNewGame()
 	{
 		WipeScene();
-		mapGenerator.Regenerate(tileParent, spawnedObjectsParent);
 		gameData.ResetResources();
+		mapGenerator.Regenerate(tileParent, spawnedObjectsParent);
 	}
 
 	public void QuitGame()
@@ -77,6 +78,7 @@ public class GameController : MonoBehaviour
 		EventManager.OnSelection += SelectObject;
 		EventManager.OnExitSelectMode += ExitSelectMode;
 		EventManager.OnRecieveGameData += SetGameData;
+		EventManager.OnBuild += CheckBuilding;
 	}
 
 	void OnDisable()
@@ -86,6 +88,15 @@ public class GameController : MonoBehaviour
 		EventManager.OnSelection -= SelectObject;
 		EventManager.OnExitSelectMode -= ExitSelectMode;
 		EventManager.OnRecieveGameData -= SetGameData;
+		EventManager.OnBuild -= CheckBuilding;
+	}
+
+	void CheckBuilding(SceneObjectBehavior sob)
+	{
+        if (sob.data.objectName == "Town Hall")
+        {
+            townHall = sob.transform;
+        }
 	}
 
 	void SetGameData(GameData data)
@@ -435,6 +446,7 @@ public class GameController : MonoBehaviour
 		yield return new WaitForSeconds(10);
 
 		gameData.AddBalanceByType(ResourceType.citizen, i);
+        EventManager.RPM.ResBubble(townHall, ResourceType.citizen, 1);
 		//GameObject citizen = Instantiate(citizenPrefab, GameObject.FindWithTag("TownHall").transform);
 		isGrowingCitizen = false;
 	}
@@ -458,8 +470,9 @@ public class GameController : MonoBehaviour
 
 		if (gameData.GetBalance().food - food.resource.amount >= 0)
 		{
-			gameData.ReduceBalanceByType (ResourceType.food, 1);			
-		} else EventManager.Message = "Our citizen are starving!";
+			gameData.ReduceBalanceByType (ResourceType.food, 1);
+            EventManager.RPM.ResBubble(townHall, ResourceType.food, -1);
+        } else EventManager.Message = "Our citizen are starving!";
 		
 		food.isGathering = false;
 	}

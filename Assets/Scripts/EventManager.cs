@@ -24,14 +24,7 @@ public class EventManager : MonoBehaviour
         set{buildObject = value; OnEnterBuildMode?.Invoke(BuildObject); }  
     } 
 
-	// Event OnBuild
-    public static event SceneObject OnBuild;
-    private static SceneObjectData builtObject; 
-    public static SceneObjectData BuiltObject 
-    {               
-        get{return builtObject;}
-        set{builtObject = value; OnBuild?.Invoke(BuiltObject); }  
-    }
+
 
 	//
 	//
@@ -51,8 +44,17 @@ public class EventManager : MonoBehaviour
 		set { selectedObject = value; OnSelection?.Invoke(SelectedObject); OnExitBuildMode?.Invoke(); }
 	}
 
-	//Delegate for Event Action
-	public delegate void EventAction();
+    // Event OnBuild
+    public static event SOBehavior OnBuild;
+    private static SceneObjectBehavior builtObject;
+    public static SceneObjectBehavior BuiltObject
+    {
+        get { return builtObject; }
+        set { builtObject = value; OnBuild?.Invoke(BuiltObject); }
+    }
+
+    //Delegate for Event Action
+    public delegate void EventAction();
 
 
 	// Event OnExitBuildMode
@@ -138,5 +140,23 @@ public class EventManager : MonoBehaviour
 	{
 		get { return gameData; }
 		set { gameData = value; OnRecieveGameData?.Invoke(GameData); }
+	}
+
+	//
+	//
+	//	Events with resourcePopupManager
+	//
+	//
+
+	//Delegate for resourcePopupManager
+	public delegate void RPMBehavior(resourcePopupManager rpm);
+
+	// Event OnSelection
+	public static event RPMBehavior OnRecieveResourcePopupManager;
+	private static resourcePopupManager rpm;
+	public static resourcePopupManager RPM
+	{
+		get { return rpm; }
+		set { rpm = value; OnRecieveResourcePopupManager?.Invoke(RPM); }
 	}
 }

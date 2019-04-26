@@ -32,7 +32,16 @@ public class resourcePopupManager : MonoBehaviour
         // create new popup and set correct image and text
         GameObject popup = Instantiate(popupPrefab, parent.transform.position+Vector3.up, Quaternion.identity);
         popup.GetComponentInChildren<Image>().sprite = tex;
-        popup.GetComponentInChildren<Text>().text = "+" + amount;
+
+        string message = "";
+
+        if (amount < 0)
+        {
+            popup.GetComponentInChildren<Text>().color = Color.red;
+        }
+        else message = "+";
+
+        popup.GetComponentInChildren<Text>().text = message + amount;
 
         popup.transform.Rotate(45,-45,0, Space.World); // set rotation to camera
         popup.AddComponent<resPopupTween>(); // add animation with destroy timer

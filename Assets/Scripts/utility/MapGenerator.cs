@@ -22,7 +22,6 @@ public struct ZoneObject
 
 public class MapGenerator : MonoBehaviour { 
      
-    //public GameObject dirtPrefab;
     public TileData tile;
     private GameObject go;
     public List<GenerationZone> zones;
