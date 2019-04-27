@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
 	private Transform spawnedObjectsParent;
 	private Transform tileParent;
 	private FrameMover frameMover;
-	private ResourcePerTime food = new ResourcePerTime() { resource = new Resource {type = ResourceType.food, amount = 1 }, perSeconds = 60, isGathering = false };
+	private ResourcePerTime food = new ResourcePerTime() { resource = new Resource {type = ResourceType.food, amount = 1 }, perSeconds = 30, isGathering = false };
 	private bool isGrowingCitizen = false;
 	private Transform spawnedCitizenParent;
     public Transform townHall;
@@ -61,9 +61,11 @@ public class GameController : MonoBehaviour
 
 	public void StartNewGame()
 	{
-		WipeScene();
+        //GetComponent<EffectManager>().enabled = false;
+        WipeScene();
 		gameData.ResetResources();
 		mapGenerator.Regenerate(tileParent, spawnedObjectsParent);
+        //GetComponent<EffectManager>().enabled = true;
 	}
 
 	public void QuitGame()
@@ -113,8 +115,11 @@ public class GameController : MonoBehaviour
 			gameData.AddBalanceByType(res.type, res.amount);
 			message += "Added :" + res.type + ":" + res.amount + "\n";
 		}
-		
+        GetComponent<EffectManager>().PlaySellEffect(selectedObject.transform);
+        GetComponent<AudioManager>().PlaySellSound();
+
 		Destroy(selectedObject.gameObject);
+        
 
 		foreach(Resource res in selectedObject.data.capacity)
 		{
@@ -123,7 +128,7 @@ public class GameController : MonoBehaviour
 		}
 
 		EventManager.ExitSelectMode();
-		EventManager.Message = message;
+		//EventManager.Message = message;
 	}
 
 	public void RotateSelectedObject()
@@ -326,7 +331,7 @@ public class GameController : MonoBehaviour
 					string message = "";
 					
 					//EventManager.Message = "Built: " + buildOjbect.objectName;
-					ObjectPlacer.PlaceObject(buildOjbect, clickedTile.transform.position, Quaternion.identity, spawnedObjectsParent);					
+					GameObject building = ObjectPlacer.PlaceObject(buildOjbect, clickedTile.transform.position, Quaternion.identity, spawnedObjectsParent);					
 					
 					foreach(Resource res in buildOjbect.cost)
 					{
@@ -342,7 +347,10 @@ public class GameController : MonoBehaviour
 
 					// relaunch OnEnterBuildMode event with selected object
 					EventManager.BuildObject = buildOjbect;
-					EventManager.Message = message;
+					//EventManager.Message = message;
+
+                    // send even with built object
+                    EventManager.BuiltObject = building.GetComponent<SceneObjectBehavior>();
 					
 				}
 				else EventManager.Message = "Cant build " + buildOjbect.objectName + ", not enough resources";
@@ -382,7 +390,8 @@ public class GameController : MonoBehaviour
 
 	public void LoadGame()
 	{
-		EventManager.Message = ("Loading game");
+        //GetComponent<EffectManager>().enabled = false;
+        EventManager.Message = ("Loading game");
 		WipeScene();
 		
 		SaveData loadedData = saveSystem.LoadGame();
@@ -404,7 +413,8 @@ public class GameController : MonoBehaviour
 			ObjectPlacer.PlaceTile(tsd.tileData, tsd.position, tsd.rotation, tsd.texture, tileParent);
 		}
 
-		EventManager.Message = ("Game Loaded");
+        //GetComponent<EffectManager>().enabled = true;
+        EventManager.Message = ("Game Loaded");
 	}
 
 	public void WipeScene()
@@ -421,7 +431,7 @@ public class GameController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (gameData.GetBalance().citizen != 0 && !food.isGathering)
+		if (gameData.GetBalance().citizen > 0 && !food.isGathering)
 		{
 			 StartFoodReduction();			
 		}

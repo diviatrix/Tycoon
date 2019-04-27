@@ -53,12 +53,12 @@ public class resPopupTween : MonoBehaviour
 {
 
     public Vector3 startPos;
-    public float moveTime = 2;
-    public float moveDistance = 1;
+    public float moveTime = 1;
+    public float moveDistance = .5f;
 
     void Start()
     {
-        Destroy(gameObject, 2);
+        Destroy(gameObject, 1);
         AnimatePopup();
     }
     void AnimatePopup()

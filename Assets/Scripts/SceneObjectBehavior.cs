@@ -21,7 +21,11 @@ public class SceneObjectBehavior : MonoBehaviour
 		plusRpm = data.plusRpm;
 		gameData = EventManager.GameData;
         rpm = EventManager.RPM;
-		EventManager.BuiltObject = this;         // send event it is built
+        if (data.objectName == "Town Hall")
+        {
+            EventManager.BuiltObject = this;         // send event it is built
+            Debug.Log("Built city hall");
+        }
     }    
 
     private void AddCollider()
@@ -32,6 +36,8 @@ public class SceneObjectBehavior : MonoBehaviour
     }
     private void AddBg()
     {
+        if (data.bgPrefab == null) return;
+
         GameObject bg = GameObject.Instantiate(data.bgPrefab,transform.position,Quaternion.identity);
         bg.transform.SetParent(transform);        
     }
@@ -64,6 +70,6 @@ public class SceneObjectBehavior : MonoBehaviour
         gameData.AddBalanceByType(plusRpm.resource.type, plusRpm.resource.amount);
         rpm.ResBubble(transform, plusRpm.resource.type, plusRpm.resource.amount);
 		plusRpm.isGathering = false;
-        EventManager.Message = ("Produced "+ plusRpm.resource.type + ": " + plusRpm.resource.amount);
+        //EventManager.Message = ("Produced "+ plusRpm.resource.type + ": " + plusRpm.resource.amount);
 	}
 }

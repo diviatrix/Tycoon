@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
   m_Name: 5_Path
   m_EditorClassIdentifier: 
   prefab: {fileID: 7340586945132021144, guid: 5c0822138509c7b479b1a280ff1e60e2, type: 3}
-  bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
-    type: 3}
+  bgPrefab: {fileID: 0}
+  popupPrefab: {fileID: 0}
   buildEffect: {fileID: 0}
   destroyEffect: {fileID: 0}
   objectName: Pathway
@@ -43,3 +42,4 @@ MonoBehaviour:
     isGathering: 1
   workers: 0
   maxWorkers: 0
+  areaOfInterest: 0
