@@ -1108,7 +1108,7 @@ MonoBehaviour:
   townHall: {fileID: 0}
   cameraComponent: {fileID: 0}
   playerTransform: {fileID: 0}
-  zoomSpeed: 1
+  zoomSpeed: 5
   touchZoomSpeed: 0.01
   camSpeed: 0.2
   touchSpeed: 0.01
@@ -1214,8 +1214,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 270.28, y: 176.89}
-  m_SizeDelta: {x: 351.52, y: 140.86}
+  m_AnchoredPosition: {x: 270.28, y: 251.15}
+  m_SizeDelta: {x: 351.52, y: 34.862}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &161474086
 MonoBehaviour:
@@ -1840,7 +1840,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -185.62146}
+  m_AnchoredPosition: {x: 0, y: -197.15248}
   m_SizeDelta: {x: 100, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &307424008
@@ -2272,6 +2272,8 @@ MonoBehaviour:
   gameData: {fileID: 0}
   button: {fileID: 589209147}
   buildPanel: {fileID: 307424006}
+  uiButtonList: []
+  objects: []
 --- !u!1 &403568685
 GameObject:
   m_ObjectHideFlags: 0
@@ -5387,7 +5389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 208, guid: 733e4084a29fa604291cd5333d8e2bc9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 208, guid: 733e4084a29fa604291cd5333d8e2bc9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5395,7 +5397,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 208, guid: 733e4084a29fa604291cd5333d8e2bc9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 208, guid: 733e4084a29fa604291cd5333d8e2bc9, type: 3}
       propertyPath: m_LocalRotation.x

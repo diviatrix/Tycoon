@@ -22,7 +22,7 @@ MonoBehaviour:
   description: Home for you forest keeper. Her grow trees and gather lumber. Requeres
     1 worker.
   sprite: {fileID: 21300000, guid: c9cbd125b927a8141977c96979a59ba7, type: 3}
-  canBuild: 1
+  canBuild: 0
   canSell: 1
   canHarvest: 0
   canRotate: 1

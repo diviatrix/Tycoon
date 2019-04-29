@@ -16,7 +16,6 @@ public class SceneObjectBehavior : MonoBehaviour
     {
         AddCollider();            
         AddBg();
-        PlayBuildEffect();
 
 		plusRpm = data.plusRpm;
 		gameData = EventManager.GameData;
@@ -40,14 +39,7 @@ public class SceneObjectBehavior : MonoBehaviour
 
         GameObject bg = GameObject.Instantiate(data.bgPrefab,transform.position,Quaternion.identity);
         bg.transform.SetParent(transform);        
-    }
-
-    private void PlayBuildEffect()
-    {
-        if (data.buildEffect != null)
-        GameObject.Instantiate(data.buildEffect,transform);        
-    }
-	
+    }	
 
 	private void FixedUpdate()
 	{

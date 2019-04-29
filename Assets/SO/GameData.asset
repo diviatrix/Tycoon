@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: d6e1f36a423ce3844814386f6f0f5486, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: 
@@ -21,12 +20,12 @@ MonoBehaviour:
     stone: 100
     wood: 150
   resources:
-    copper: 0
-    citizen: 0
-    food: 25
-    gold: 25
-    stone: 100
-    wood: 150
+    copper: 126
+    citizen: 90
+    food: 746
+    gold: 0
+    stone: 383
+    wood: 294
   startMaxResources:
     copper: 0
     citizen: 0
@@ -35,12 +34,12 @@ MonoBehaviour:
     stone: 0
     wood: 0
   maxResources:
-    copper: 0
-    citizen: 0
-    food: 0
-    gold: 0
-    stone: 0
-    wood: 0
+    copper: 125
+    citizen: 90
+    food: 750
+    gold: 25
+    stone: 450
+    wood: 600
   buildObjects:
   - {fileID: 11400000, guid: cf18c93b25420a6449c69afece11e93c, type: 2}
   - {fileID: 11400000, guid: be835f0ffca260b429b9933f88a7aff8, type: 2}
@@ -50,6 +49,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8a306aab5a756564ab83f74150892b66, type: 2}
   - {fileID: 11400000, guid: 50b4f0944f6567d4288b262facf5d7bc, type: 2}
   - {fileID: 11400000, guid: eda2255ca0ea4b44c98cc844cc536de4, type: 2}
+  - {fileID: 11400000, guid: a1c3bd700f9834e4694cb1a790a5a0e7, type: 2}
+  - {fileID: 11400000, guid: 275daf58c622b8f40943640c85710766, type: 2}
   resourceObjects:
   - sceneObjectData: {fileID: 11400000, guid: 98d51dd39a9945f4ab6d9b0443fbcb77, type: 2}
     rate: 1

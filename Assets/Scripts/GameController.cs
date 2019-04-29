@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
 	private Transform spawnedObjectsParent;
 	private Transform tileParent;
 	private FrameMover frameMover;
-	private ResourcePerTime food = new ResourcePerTime() { resource = new Resource {type = ResourceType.food, amount = 1 }, perSeconds = 30, isGathering = false };
+	private ResourcePerTime food = new ResourcePerTime() { resource = new Resource {type = ResourceType.food, amount = 1 }, perSeconds = 10, isGathering = false };
 	private bool isGrowingCitizen = false;
 	private Transform spawnedCitizenParent;
     public Transform townHall;
@@ -218,7 +218,7 @@ public class GameController : MonoBehaviour
 		if (!isMobile)
 		{
 			// camera dnd
-			if (Input.GetMouseButton(2))
+			if (Input.GetMouseButton(1))
 			{
 				CameraMovementHandler();
 			}
@@ -415,6 +415,7 @@ public class GameController : MonoBehaviour
 
         //GetComponent<EffectManager>().enabled = true;
         EventManager.Message = ("Game Loaded");
+        EventManager.GameData = gameData;
 	}
 
 	public void WipeScene()

@@ -9,19 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 701aca31cd5557a439cd1d79c00116f7, type: 3}
   m_Name: 1_SmallHouse
   m_EditorClassIdentifier: 
   prefab: {fileID: 180, guid: 7d0292b96260707498c6ba78c5337b59, type: 3}
   bgPrefab: {fileID: 6046403421447144417, guid: 7ee6429a632927346a4ce711396c4858,
     type: 3}
+  popupPrefab: {fileID: 0}
   buildEffect: {fileID: 0}
   destroyEffect: {fileID: 0}
   objectName: Small house
   description: Basic small house, can host 3 citizen
   sprite: {fileID: 21300000, guid: 18a10ac559cdb5d4480864d9b5f4fc6b, type: 3}
-  canBuild: 1
+  canBuild: 0
   canSell: 1
   canHarvest: 0
   canRotate: 1
@@ -45,3 +45,4 @@ MonoBehaviour:
     isGathering: 1
   workers: 0
   maxWorkers: 0
+  areaOfInterest: 0
